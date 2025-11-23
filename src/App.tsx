@@ -562,21 +562,46 @@ export default function App() {
     }, 0);
 
     const ratio = maxPossibleSoFar > 0 ? session.score / maxPossibleSoFar : 0;
+
+    // Calculate absolute progression based on max Tier reached
+    // Logic:
+    // Tier 1 Fail -> Rank 0-2
+    // Tier 1 Pass -> Rank 3-4 (Junior)
+    // Tier 2 Pass -> Rank 5-6 (Mid)
+    // Tier 3 Pass -> Rank 7-8 (Senior/Lead)
+    // Tier 4 Pass -> Rank 9 (God)
     
-    // 10 Tiers Logic
+    const maxTierReached = session.history.reduce((max, h) => {
+        const q = session.questions.find(q => q.id === h.questionId);
+        if (q && h.correct) return Math.max(max, q.tier);
+        return max;
+    }, 0);
+
+    // Did we FAIL the session (lives = 0) or FINISH it?
+    const isGameClear = session.lives > 0;
+
     let rankIndex = 0;
     let style = "text-cyber-muted";
 
-    if (ratio >= 0.9) rankIndex = 9; // Principal
-    else if (ratio >= 0.8) rankIndex = 8; // Architect
-    else if (ratio >= 0.7) rankIndex = 7; // Tech Lead
-    else if (ratio >= 0.6) rankIndex = 6; // Senior
-    else if (ratio >= 0.5) rankIndex = 5; // Confirmed
-    else if (ratio >= 0.4) rankIndex = 4; // Junior
-    else if (ratio >= 0.3) rankIndex = 3; // Junior en sursis
-    else if (ratio >= 0.2) rankIndex = 2; // Stagiaire
-    else if (ratio >= 0.1) rankIndex = 1; // Touriste
-    else rankIndex = 0; // Abandonne
+    if (maxTierReached === 4 && isGameClear) {
+        // God Tier
+        rankIndex = 9;
+    } else if (maxTierReached === 4) {
+        // Failed at Tier 4 but reached it
+        rankIndex = 8; 
+    } else if (maxTierReached === 3) {
+        // Failed at Tier 4 or cleared Tier 3
+        rankIndex = isGameClear ? 8 : 7;
+    } else if (maxTierReached === 2) {
+        // Failed at Tier 3 or cleared Tier 2
+        rankIndex = isGameClear ? 6 : 5; 
+    } else if (maxTierReached === 1) {
+        // Failed at Tier 2 or cleared Tier 1
+        rankIndex = isGameClear ? 4 : 3;
+    } else {
+        // Failed at Tier 1
+        rankIndex = Math.floor(ratio * 2); // 0, 1 or 2 depending on how bad it was
+    }
 
     const rankTitle = RANKS[rankIndex as keyof typeof RANKS];
 

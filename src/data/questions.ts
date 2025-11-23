@@ -71,7 +71,7 @@ export const RANKS = {
   6: "Développeur Senior",
   7: "Tech Lead",
   8: "Architecte Logiciel",
-  9: "Principal Engineer / Dieu du Code"
+  9: "Principal Engineer"
 };
 
 export const TRACKS: Record<TrackId, Track> = {
