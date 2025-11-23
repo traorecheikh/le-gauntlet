@@ -483,25 +483,54 @@ export default function App() {
   const renderGameOver = () => {
     if (!session) return null;
     
-    // Determine Rank
-    let rank = RANKS.noob;
-    let message = INSULTS[Math.floor(Math.random() * INSULTS.length)];
+    // Calculate Rank based on percentage
+    const maxScore = session.questions.reduce((acc, q) => acc + TIERS_CONFIG[q.tier as keyof typeof TIERS_CONFIG].multiplier, 0);
+    // Real score calculation needs to track max possible score of *played* questions, 
+    // but for this prototype we approximate ratio based on questions answered.
+    // A better ratio is score / (questions_seen * avg_points)
+    
+    // Let's use a simple accuracy ratio on answered questions for the rank title
+    const answeredCount = session.currentIndex; // Questions actually faced
+    const maxPossibleSoFar = session.history.reduce((acc, h) => {
+        const q = session.questions.find(q => q.id === h.questionId);
+        return acc + (q ? TIERS_CONFIG[q.tier as keyof typeof TIERS_CONFIG].multiplier : 0);
+    }, 0);
+
+    const ratio = maxPossibleSoFar > 0 ? session.score / maxPossibleSoFar : 0;
+    
+    // 10 Tiers Logic
+    let rankIndex = 0;
     let style = "text-cyber-muted";
 
-    // Rough logic for prototype
-    // const totalPossible = session.questions.length * 100; // Very rough max
-    const ratio = session.score / (session.questions.length * 20); // Adjusted for tiers
+    if (ratio >= 0.9) rankIndex = 9; // Principal
+    else if (ratio >= 0.8) rankIndex = 8; // Architect
+    else if (ratio >= 0.7) rankIndex = 7; // Tech Lead
+    else if (ratio >= 0.6) rankIndex = 6; // Senior
+    else if (ratio >= 0.5) rankIndex = 5; // Confirmed
+    else if (ratio >= 0.4) rankIndex = 4; // Junior
+    else if (ratio >= 0.3) rankIndex = 3; // Junior en sursis
+    else if (ratio >= 0.2) rankIndex = 2; // Stagiaire
+    else if (ratio >= 0.1) rankIndex = 1; // Touriste
+    else rankIndex = 0; // Abandonne
 
-    if (session.lives === 0) {
-       message = "Tu as épuisé toutes tes vies. Game Over.";
-    } else {
+    const rankTitle = RANKS[rankIndex as keyof typeof RANKS];
+
+    // Color mapping
+    if (rankIndex >= 8) style = "text-purple-400"; // God Tier
+    else if (rankIndex >= 6) style = "text-cyber-neonBlue"; // Senior/Lead
+    else if (rankIndex >= 4) style = "text-cyber-neonGreen"; // Mid/Junior
+    else if (rankIndex >= 2) style = "text-yellow-500"; // Low Tier
+    else style = "text-cyber-neonRed"; // Fail Tier
+
+    let message = INSULTS[Math.floor(Math.random() * INSULTS.length)];
+    if (session.lives > 0 && ratio > 0.4) {
        message = PRAISE[Math.floor(Math.random() * PRAISE.length)];
     }
-
-    if (ratio > 0.8) { rank = RANKS.elite; style="text-cyber-neonBlue"; }
-    else if (ratio > 0.5) { rank = RANKS.competent; style="text-cyber-neonGreen"; }
-    else if (ratio > 0.2) { rank = RANKS.script_kiddie; style="text-yellow-500"; }
-    else { rank = RANKS.noob; style="text-cyber-neonRed"; }
+    
+    // Force brutal message for low ranks even if lives remain (e.g. rage quit or accidental finish)
+    if (rankIndex < 2) {
+        message = "Ne touche plus jamais à un IDE. C'est pour le bien de l'humanité.";
+    }
 
     return (
       <div className="max-w-2xl w-full mx-auto text-center space-y-12 p-8">
@@ -512,15 +541,16 @@ export default function App() {
         >
           <Trophy className={cn("w-24 h-24 mx-auto mb-6", style)} />
           <h2 className="text-5xl font-black text-white mb-2">SESSION TERMINÉE</h2>
-          <div className="font-mono text-cyber-muted">SCORE FINAL: <span className="text-white">{session.score}</span></div>
+          <div className="font-mono text-cyber-muted">SCORE: <span className="text-white">{session.score}</span> / {maxPossibleSoFar}</div>
+          <div className="font-mono text-xs text-cyber-muted mt-1">PRÉCISION: {Math.round(ratio * 100)}%</div>
         </motion.div>
 
         <div className="border border-cyber-gray bg-cyber-gray/10 p-8 relative">
             <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-cyber-black px-4 font-mono text-xs text-cyber-muted uppercase">
                 Classification Détectée
             </div>
-            <div className={cn("text-3xl md:text-4xl font-bold uppercase mb-4", style)}>
-                {rank}
+            <div className={cn("text-3xl md:text-4xl font-bold uppercase mb-4 glitched-text", style)}>
+                {rankTitle}
             </div>
             <p className="font-mono text-lg text-white">
                 "{message}"
