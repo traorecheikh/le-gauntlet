@@ -211,158 +211,171 @@ export const TRACKS: Record<TrackId, Track> = {
   },
   fullstack_dev: {
     id: 'fullstack_dev',
-    name: 'Fullstack Dev',
-    description: 'Architecture, System Design, JS, DB. Savoir centrer une div ne suffit pas.',
+    name: 'Fullstack & Patterns',
+    description: 'Vue.js, Java/PHP, Design Patterns. Pour les architectes, pas les maçons.',
     questions: [
       // --- TIER 1 (Basic) ---
       {
         id: 'fs_t1_1',
         tier: 1,
-        text: "Quelle est la complexité temporelle d'une recherche dans une Hash Map (cas moyen) ?",
+        text: "Vue.js : Quelle est la différence principale entre `v-if` et `v-show` ?",
         options: [
-          "O(n)",
-          "O(log n)",
-          "O(1)",
-          "O(n^2)"
+          "Aucune, c'est du sucre syntaxique.",
+          "v-if modifie le CSS (display:none), v-show supprime l'élément du DOM.",
+          "v-if ajoute/supprime l'élément du DOM, v-show modifie juste le CSS (display:none).",
+          "v-show est pour les boucles."
         ],
         correctAnswer: 2,
-        explanation: "O(1). Constant Time. C'est la base absolue de l'optimisation logicielle. Une Hash Map (ou Dictionnaire/Objet) utilise une fonction de hachage pour calculer directement l'adresse mémoire où la valeur est stockée. Contrairement à un tableau où tu dois parcourir les éléments un par un (O(n)), ou un arbre binaire (O(log n)), l'accès est quasi-instantané quelle que soit la taille des données. Si tu utilises un tableau pour faire des recherches par ID, tu commets un crime contre la performance."
+        explanation: "Base de Vue.js. `v-if` est un rendu conditionnel 'réel' : si la condition est fausse, le bloc n'existe pas dans le DOM (détruit/recréé). `v-show` rend TOUJOURS l'élément mais toggle la propriété CSS `display`. Si tu as un élément qui change d'état 10 fois par seconde, utilise `v-show` pour la performance. Si la condition change rarement, `v-if` est plus propre."
       },
       {
         id: 'fs_t1_2',
         tier: 1,
-        text: "Que fait exactement `useEffect(() => {}, [])` en React ?",
+        text: "Spring Boot : À quoi sert l'annotation `@Autowired` (ou l'injection par constructeur) ?",
         options: [
-          "Il s'exécute à chaque rendu.",
-          "Il s'exécute uniquement après le premier rendu (Mount).",
-          "Il s'exécute quand le composant est détruit.",
-          "Il crée une boucle infinie."
+          "À connecter la base de données.",
+          "À permettre à Spring d'injecter automatiquement les dépendances (Beans) nécessaires.",
+          "À rendre une classe publique.",
+          "À démarrer le serveur Tomcat."
         ],
         correctAnswer: 1,
-        explanation: "Le tableau de dépendances `[]` (vide) indique à React que cet effet ne dépend d'aucune valeur (prop ou state). Par conséquent, React n'a jamais besoin de le ré-exécuter après la première fois. Il s'exécute donc UNE SEULE FOIS, juste après que le composant a été affiché dans le DOM (Mount). C'est l'endroit standard pour faire des appels API initiaux. Si tu oublies le tableau, l'effet tourne en boucle infinie ou à chaque rendu, et tu fais crasher le navigateur de ton utilisateur."
+        explanation: "C'est le cœur de l'Inversion de Contrôle (IoC). Au lieu de faire `new Service()` dans ton contrôleur (couplage fort), tu demandes à Spring de te fournir une instance gérée (Bean). L'injection par constructeur est recommandée aujourd'hui pour garantir que le Bean est immuable et testable."
       },
       {
         id: 'fs_t1_3',
         tier: 1,
-        text: "Quelle méthode HTTP est idempotente ?",
+        text: "Design Patterns : Quel est le but principal du pattern 'Singleton' ?",
         options: [
-          "POST",
-          "PUT",
-          "Toutes les méthodes.",
-          "Aucune."
+          "S'assurer qu'une classe a des instances illimitées.",
+          "Garantir qu'une classe n'a qu'une seule instance et fournir un point d'accès global à celle-ci.",
+          "Créer des objets complexes étape par étape.",
+          "Transformer l'interface d'une classe en une autre."
         ],
         correctAnswer: 1,
-        explanation: "L'idempotence est un concept crucial pour la robustesse des API. Une opération est idempotente si l'appliquer plusieurs fois a le même effet que l'appliquer une seule fois. PUT est idempotent : si tu envoies `PUT /users/1 {name: 'Bob'}` dix fois, l'utilisateur s'appellera toujours Bob à la fin. POST n'est PAS idempotent : si tu envoies `POST /users {name: 'Bob'}` dix fois, tu crées 10 utilisateurs différents. Ne confonds jamais les deux."
+        explanation: "Le Singleton est l'un des patterns les plus connus (et abusés). Il garantit l'unicité (ex: connexion DB, Configuration). ATTENTION : C'est souvent considéré comme un anti-pattern aujourd'hui car il introduit un état global caché, rend les tests unitaires difficiles (mocking compliqué) et crée un couplage fort. En Spring, les Beans sont des Singletons par défaut, mais gérés par le conteneur (bien mieux)."
       },
       {
         id: 'fs_t1_4',
         tier: 1,
-        text: "En CSS, que fait `box-sizing: border-box` ?",
+        text: "SQL : Quelle est la différence entre `INNER JOIN` et `LEFT JOIN` ?",
         options: [
-          "Ajoute une bordure à la boîte.",
-          "Inclut le padding et la bordure dans la largeur/hauteur totale.",
-          "Force la boîte à être carrée.",
-          "Rien, c'est la valeur par défaut."
+          "INNER JOIN est plus rapide.",
+          "INNER JOIN ne retourne que les correspondances exactes. LEFT JOIN retourne tout ce qu'il y a à gauche, même sans correspondance (NULL).",
+          "LEFT JOIN est déprécié.",
+          "INNER JOIN est pour les nombres uniquement."
         ],
         correctAnswer: 1,
-        explanation: "C'est la première ligne de CSS que tu devrais écrire dans n'importe quel projet. Le modèle par défaut (`content-box`) est illogique : si tu mets `width: 100px` et `padding: 20px`, ton élément fait 140px de large. Ça casse tout. Avec `border-box`, `width: 100px` signifie que l'élément fait 100px au total, et le padding mange vers l'intérieur. C'est la seule façon saine de faire de la mise en page."
+        explanation: "Si tu ne sais pas faire une jointure, tu n'es pas fullstack, tu es stagiaire HTML. `INNER` = Intersection (A ∩ B). `LEFT` = Tout A + (B si existe sinon NULL). C'est fondamental pour ne pas perdre de données quand tu requêtes des relations optionnelles."
       },
 
       // --- TIER 2 (Intermediate) ---
       {
         id: 'fs_t2_1',
         tier: 2,
-        text: "Qu'est-ce que le 'Prop Drilling' et comment l'éviter ?",
+        text: "Design Patterns : Lequel de ces patterns est de type 'Comportemental' (Behavioral) ?",
         options: [
-          "C'est percer des trous dans le DOM.",
-          "Passer des données de parent à enfant sur de multiples niveaux inutiles.",
-          "C'est une technique d'optimisation.",
-          "C'est utiliser trop de `props`."
+          "Factory Method",
+          "Observer",
+          "Adapter",
+          "Builder"
         ],
         correctAnswer: 1,
-        explanation: "Imagine que tu dois passer l'objet `User` du composant racine (`App`) jusqu'à un bouton dans le footer, en traversant 10 composants qui n'ont rien à faire de cet objet (`Layout`, `Sidebar`, `Menu`, etc.). C'est sale, verbeux et difficile à maintenir. Pour éviter ça, on utilise l'inversion de contrôle (Composition) ou des outils de gestion d'état global comme React Context, Redux, ou Zustand, qui permettent d'injecter la donnée directement là où elle est nécessaire."
+        explanation: "Observer est comportemental : il définit une dépendance un-à-plusieurs entre objets pour que quand l'un change d'état, tous les autres soient notifiés (base de RxJS, des EventListeners, et de la réactivité Vue). Factory et Builder sont Créationnels. Adapter est Structurel. Connaître la catégorie t'aide à savoir QUAND l'utiliser."
       },
       {
         id: 'fs_t2_2',
         tier: 2,
-        text: "Différence fondamentale entre 'Process' et 'Thread' ?",
+        text: "Laravel / ORM : Qu'est-ce que le problème 'N+1' et comment le résoudre avec Eloquent ?",
         options: [
-          "Aucune.",
-          "Un Process partage la mémoire, un Thread est isolé.",
-          "Un Process a son propre espace mémoire isolé; un Thread partage la mémoire du Process parent.",
-          "Un Thread est plus lent."
+          "Un bug de mathématiques dans PHP.",
+          "C'est quand tu fais une boucle qui exécute une requête SQL par itération (ex: récupérer l'auteur pour chaque livre). Solution : Eager Loading (`with()`).",
+          "C'est quand tu as trop de tables.",
+          "C'est une erreur de pagination."
         ],
-        correctAnswer: 2,
-        explanation: "C'est la base des Systèmes d'Exploitation. Un PROCESSUS est une instance lourde d'un programme : il a sa propre mémoire virtuelle protégée. Si un process plante, les autres survivent. Un THREAD (fil d'exécution) est une unité légère au sein d'un process. Tous les threads d'un même process partagent le même espace mémoire (le Tas/Heap). Avantage : communication ultra-rapide entre threads. Risque : si un thread fait une erreur mémoire (segfault), il fait crasher tout le processus."
+        correctAnswer: 1,
+        explanation: "Le tueur de performance #1 des apps Laravel/Hibernate. Code coupable : `foreach ($books as $book) { echo $book->author->name; }`. Si tu as 50 livres, tu fais 1 requête pour les livres + 50 requêtes pour les auteurs = 51 requêtes. Avec `$books = Book::with('author')->get()`, tu fais 2 requêtes. Point final."
       },
       {
         id: 'fs_t2_3',
         tier: 2,
-        text: "Pourquoi un 'Full Table Scan' est-il à éviter sur une base de données SQL ?",
+        text: "Design Patterns : Dans quel cas utiliserais-tu le pattern 'Strategy' ?",
         options: [
-          "C'est une faille de sécurité.",
-          "La complexité est O(n), ce qui est inacceptable pour de grands volumes de données.",
-          "La requête échoue.",
-          "La base crée l'index automatiquement."
+          "Pour créer une seule instance d'une classe.",
+          "Pour définir une famille d'algorithmes, les encapsuler chacun, et les rendre interchangeables à l'exécution.",
+          "Pour adapter une interface incompatible.",
+          "Pour notifier des abonnés d'un changement."
         ],
         correctAnswer: 1,
-        explanation: "Quand tu fais une recherche `WHERE email = 'x'` sans index, la base de données doit lire physiquement CHAQUE ligne de la table, du début à la fin, pour voir si elle correspond. Sur 100 lignes, ça va. Sur 10 millions de lignes, ton serveur I/O sature, le CPU chauffe, et ta requête prend 30 secondes au lieu de 10 millisecondes. L'index (généralement un B-Tree) permet de trouver la donnée en O(log n) sauts, ce qui est des ordres de grandeur plus rapide."
+        explanation: "Indispensable pour éviter les `if/else` géants. Exemple : Paiement. Tu as une interface `PaymentStrategy`. Tu as des implémentations `PayPalStrategy`, `StripeStrategy`. Ton code client utilise l'interface. Tu peux changer de méthode de paiement à la volée sans toucher au code métier. C'est le 'O' de SOLID (Open/Closed Principle)."
       },
 
       // --- TIER 3 (Advanced) ---
       {
         id: 'fs_t3_1',
         tier: 3,
-        text: "CORS : Ton frontend (localhost:3000) tape ton API (api.com). Erreur CORS. Qui bloque ?",
+        text: "Design Patterns : Quelle est la différence entre 'Abstract Factory' et 'Factory Method' ?",
         options: [
-          "Le serveur API refuse la connexion.",
-          "Le navigateur bloque la réponse pour ta sécurité.",
-          "Ton firewall.",
-          "Le DNS."
+          "Aucune, c'est pareil.",
+          "Factory Method utilise l'héritage pour décider quel objet instancier. Abstract Factory utilise la composition pour créer des familles d'objets liés.",
+          "Abstract Factory crée des classes abstraites.",
+          "Factory Method est statique."
         ],
         correctAnswer: 1,
-        explanation: "C'est le concept le plus mal compris du web. Le serveur API a REÇU la requête, l'a traitée, et a renvoyé la réponse (souvent 200 OK). C'est ton NAVIGATEUR qui, en recevant la réponse, vérifie si le header `Access-Control-Allow-Origin` correspond à l'origine de ton site. Si non, le NAVIGATEUR refuse de donner les données à ton code JavaScript. C'est une sécurité côté client pour empêcher un site malveillant de lire les réponses de ton API au nom de l'utilisateur connecté."
+        explanation: "Subtile mais crucial. Factory Method : Une méthode abstraite `createAnimal()` dans une classe, que les sous-classes `DogFactory` implémentent. Abstract Factory : Une interface qui contient PLUSIEURS méthodes de création (`createChair()`, `createSofa()`) pour créer toute une famille de produits cohérents (ex: Meubles Victoriens vs Modernes) sans spécifier leurs classes concrètes."
       },
       {
         id: 'fs_t3_2',
         tier: 3,
-        text: "Event Loop Node.js : Dans quel ordre précis s'exécutent : 1. setTimeout(..., 0), 2. process.nextTick(), 3. Promise.resolve().then() ?",
+        text: "Node.js : Comment détecter et débugger une fuite de mémoire (Memory Leak) ?",
         options: [
-          "1, 2, 3",
-          "2, 3, 1",
-          "3, 2, 1",
-          "C'est aléatoire."
+          "En redémarrant le serveur toutes les heures.",
+          "En regardant les logs d'erreur.",
+          "En utilisant l'inspecteur Chrome (Heap Snapshot) pour comparer l'allocation mémoire avant/après une charge.",
+          "En augmentant la RAM du serveur."
+        ],
+        correctAnswer: 2,
+        explanation: "Augmenter la RAM ne fait que repousser le crash. Une fuite, c'est des objets référencés qui ne sont pas Garbage Collected (ex: listeners globaux, closures infinies). Tu dois prendre un Snapshot du Heap, stresser l'app, en prendre un 2ème, et comparer les objets qui n'ont pas disparu. Si tu ne sais pas faire ça, ton app Node ne tiendra pas la prod."
+      },
+      {
+        id: 'fs_t3_3',
+        tier: 3,
+        text: "Design Patterns : Le pattern 'Adapter' (Wrapper) est utile quand...",
+        options: [
+          "Tu veux limiter l'accès à une classe.",
+          "Tu veux faire travailler ensemble des classes aux interfaces incompatibles.",
+          "Tu veux ajouter des fonctionnalités dynamiquement.",
+          "Tu veux cloner des objets."
         ],
         correctAnswer: 1,
-        explanation: "L'ordre est vital pour comprendre l'asynchronisme. `process.nextTick` n'est techniquement pas dans l'Event Loop, il s'exécute DÈS que l'opération courante finit, AVANT tout le reste. C'est la priorité absolue. Ensuite, les PROMISES (Microtasks queue) sont traitées. Enfin, `setTimeout` (Macrotasks queue) est traité au prochain tour de boucle (Timer phase). Donc : nextTick -> Promise -> setTimeout. Si tu te trompes là-dessus, tu auras des race conditions inexplicables."
+        explanation: "Le sauveur des intégrations Legacy. Tu as une vieille classe `OldSystem` qui attend XML. Tu as un nouveau `ModernSystem` qui envoie JSON. Tu crées un Adapter qui implémente l'interface attendue par le vieux système, prend le JSON, le convertit en XML, et appelle le vieux système. Le code client ne voit rien."
       },
 
       // --- TIER 4 (Impossible) ---
       {
         id: 'fs_t4_1',
         tier: 4,
-        text: "System Design : Comment garantis-tu l'idempotence sur une API de paiement (POST /charge) en cas de timeout réseau ?",
+        text: "Architecture : CQRS (Command Query Responsibility Segregation). Quel est le principe et le coût ?",
         options: [
-          "Je prie pour que le réseau ne coupe pas.",
-          "Le client génère et envoie une clé d'idempotence (UUID). Le serveur locke cette clé, traite, et stocke le résultat. En cas de retry avec la même clé, on renvoie le résultat stocké.",
-          "Je vérifie si le montant est le même.",
-          "J'utilise GET au lieu de POST."
+          "Séparer le code en backend/frontend. Coût : Latence.",
+          "Séparer les modèles de lecture (Query) et d'écriture (Command). Coût : Complexité accrue et Consistance Éventuelle.",
+          "Utiliser deux bases de données identiques. Coût : Stockage.",
+          "C'est un pattern pour les API REST."
         ],
         correctAnswer: 1,
-        explanation: "C'est le standard de l'industrie (Stripe, PayPal). Le problème : le client envoie la requête, le serveur débite la carte, mais la réponse 'Succès' se perd à cause d'une coupure réseau. Le client, ne recevant rien, réessaie (Retry). Sans idempotence, le client est débité deux fois. Avec une clé d'idempotence (unique par transaction logique), le serveur reconnaît la deuxième requête comme étant une copie de la première et renvoie simplement la réponse précédente sans ré-exécuter le débit."
+        explanation: "Dans une app complexe, le modèle pour ÉCRIRE (règles métiers validation, 3e forme normale) est souvent différent du modèle optimisé pour LIRE (DTO plats, jointures pré-calculées). CQRS les sépare physiquement. Tu peux scaler le Read indépendamment du Write. Le prix à payer ? La complexité de synchronisation. Si tu écris dans DB1, DB2 (lecture) n'est pas à jour instantanément (Eventual Consistency). À n'utiliser que si nécessaire."
       },
       {
         id: 'fs_t4_2',
         tier: 4,
-        text: "Problème 'Thundering Herd' (Troupeau qui charge) avec le cache. Que se passe-t-il et comment le résoudre ?",
+        text: "Java/Spring : Comment fonctionne `@Transactional` sous le capot et quel est le piège de l'appel interne ?",
         options: [
-          "Trop d'utilisateurs se connectent. Solution : Load Balancer.",
-          "Une entrée de cache très demandée expire. 1000 requêtes tapent la DB en même temps pour la recalculer. Solution : Locking ou Stale-while-revalidate.",
-          "Une attaque DDoS. Solution : Firewall.",
-          "Un bug de React. Solution : useMemo."
+          "Ça ouvre une connexion JDBC magique.",
+          "Ça utilise AOP (Aspect Oriented Programming) via un Proxy. Si tu appelles `this.maMethodeTransactionnelle()` depuis la même classe, le Proxy est contourné et la transaction n'est JAMAIS créée.",
+          "Ça locke toute la table.",
+          "Ça marche toujours, peu importe d'où on l'appelle."
         ],
         correctAnswer: 1,
-        explanation: "Imagine une donnée critique (ex: prix du Bitcoin) en cache pour 1 seconde. À T+1.01s, la donnée expire. Si tu as 10 000 req/sec, instantanément 10 000 requêtes ne trouvent pas le cache et tapent TA BASE DE DONNÉES simultanément pour calculer la même valeur. Ta DB explose. La solution est de ne laisser passer qu'UNE seule requête pour recalculer la valeur (Locking), ou mieux, de servir la 'vieille' donnée (Stale) pendant qu'une requête recalcule la nouvelle en arrière-plan (Stale-while-revalidate)."
+        explanation: "Le piège classique qui a fait perdre des millions. Spring enveloppe ta classe dans un Proxy qui gère le `begin/commit/rollback`. Quand tu appelles une méthode depuis l'extérieur, tu passes par le Proxy -> Transaction OK. Quand tu fais un appel interne (`this.method()`), tu appelles directement l'objet réel, en contournant le Proxy -> PAS de Transaction. Le code tourne, mais rien n'est rollback en cas d'erreur. Silencieux et mortel. C'est un exemple du pattern Proxy en action."
       }
     ]
   }
