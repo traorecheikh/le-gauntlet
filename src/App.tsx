@@ -61,8 +61,8 @@ const TIERS_CONFIG = {
 };
 
 const TIME_LIMITS = {
-  LOW: 20, // Tier 1 & 2
-  HIGH: 40 // Tier 3 & 4
+  LOW: 60, // Tier 1 & 2
+  HIGH: 120 // Tier 3 & 4
 };
 
 // --- Components ---

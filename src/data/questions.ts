@@ -1,3 +1,4 @@
+
 export type TrackId = 'data_science' | 'fullstack_dev';
 
 export interface Question {
@@ -24,16 +25,25 @@ export const INSULTS = [
   "Tu es la raison pour laquelle l'IA va nous remplacer.",
   "On dirait du code généré par un grille-pain en surchauffe.",
   "J'ai vu des stagiaires faire mieux le premier jour.",
-  "Arrête de deviner, ça se voit."
+  "Arrête de deviner, ça se voit.",
+  "Ton code sent le copier-coller StackOverflow mal compris.",
+  "C'est gênant pour toute la profession.",
+  "Même un plugin WordPress est mieux codé que ça.",
+  "Tu devrais envisager une carrière dans le management.",
+  "Exception non gérée : Ton manque de talent.",
+  "Ton commit a été rejeté par le bon goût.",
+  "Tu es le goulot d'étranglement de ton équipe."
 ];
 
 export const TIER_1_INSULTS = [
-  "Sérieusement ? C'est le niveau 1. C'est la base absolue. C'est humiliant.",
+  "Sérieusement ? C'est le niveau 1. C'est la base absolue.",
   "Si tu rates ça, pose ta démission. Tout de suite.",
   "Ma grand-mère comprend mieux ce concept que toi.",
   "C'est une blague ? C'est niveau tutoriel YouTube.",
   "Tu n'as aucune excuse pour rater ça. Aucune.",
-  "Retourne apprendre à lire la documentation."
+  "Retourne apprendre à lire la documentation.",
+  "Même PHP 4 avait honte de cette erreur.",
+  "C'est la première question d'un entretien junior, et tu l'as ratée."
 ];
 
 export const PRAISE = [
@@ -41,7 +51,9 @@ export const PRAISE = [
   "Acceptable. Ne prends pas la grosse tête.",
   "Tu as peut-être un avenir... peut-être.",
   "Enfin une lueur d'intelligence dans ce néant.",
-  "Tu as survécu. Pour l'instant."
+  "Tu as survécu. Pour l'instant.",
+  "Impressionnant. Très impressionnant.",
+  "Code propre. Logique valide. Continue."
 ];
 
 export const RANKS = {
@@ -57,325 +69,1771 @@ export const TRACKS: Record<TrackId, Track> = {
     name: 'Data Science',
     description: 'Algorithmes, Stats, Deep Learning. Pas pour les faibles.',
     questions: [
-      // --- TIER 1 (Basic) ---
-      {
+       {
         id: 'ds_t1_1',
         tier: 1,
         text: "Quelle est la différence fondamentale entre la régression linéaire et logistique ?",
-        options: [
-          "Il n'y en a pas, c'est juste le nom qui change.",
-          "La linéaire prédit une valeur continue, la logistique une probabilité binaire.",
-          "La logistique est pour les données textuelles uniquement.",
-          "La linéaire utilise des réseaux de neurones."
-        ],
+        options: ["Rien.", "Linéaire = Continue, Logistique = Classification (Probabilité).", "Logistique = Texte.", "Linéaire = Deep Learning."],
         correctAnswer: 1,
-        explanation: "Si tu as raté ça, c'est grave. La régression linéaire cherche à prédire une valeur continue (comme un prix ou une température) en ajustant une droite (ou hyperplan) qui minimise l'erreur quadratique. La régression logistique, malgré son nom trompeur, est un algorithme de CLASSIFICATION. Elle utilise une fonction logistique (sigmoïde) pour transformer une combinaison linéaire de variables en une probabilité comprise entre 0 et 1. C'est la base absolue de la modélisation prédictive."
+        explanation: "La régression linéaire prédit une valeur continue (prix). La logistique est un classifieur qui donne une probabilité (0-1) via une sigmoïde."
       },
-      {
+       {
         id: 'ds_t1_2',
         tier: 1,
         text: "Que signifie 'Overfitting' ?",
-        options: [
-          "Le modèle est trop lent à entraîner.",
-          "Le modèle apprend le bruit des données d'entraînement au lieu du signal.",
-          "Le modèle est trop simple pour capturer la tendance.",
-          "C'est quand on a trop de données."
-        ],
+        options: ["Le modèle est trop lent.", "Le modèle apprend le bruit au lieu du signal (par cœur).", "Pas assez de données.", "Trop de couches."],
         correctAnswer: 1,
-        explanation: "C'est l'erreur classique du débutant qui veut '100% de précision'. L'overfitting (surapprentissage) se produit quand ton modèle est trop complexe par rapport à la quantité de données. Il finit par mémoriser le bruit aléatoire et les spécificités de ton jeu d'entraînement au lieu de comprendre la structure sous-jacente (le signal). Résultat : il excelle en entraînement mais s'effondre totalement sur de nouvelles données (haute variance). On le combat avec de la régularisation (L1/L2, Dropout) ou plus de données."
-      },
-      {
-        id: 'ds_t1_3',
-        tier: 1,
-        text: "En Pandas, à quoi sert 'inplace=True' ?",
-        options: [
-          "À optimiser la vitesse de calcul x10.",
-          "À créer une copie du DataFrame.",
-          "À modifier l'objet original sans renvoyer de copie.",
-          "À supprimer les valeurs nulles."
-        ],
-        correctAnswer: 2,
-        explanation: "C'est du Python de base. Par défaut, les méthodes Pandas renvoient une NOUVELLE copie de l'objet modifié pour éviter les effets de bord (principes de programmation fonctionnelle). `inplace=True` force la modification directe de l'objet en mémoire. ATTENTION : C'est souvent une mauvaise pratique aujourd'hui et la bibliothèque tend à déprécier ce pattern car il empêche le chaînage de méthodes (method chaining) et ne garantit pas toujours un gain de mémoire réel sous le capot."
-      },
-       {
-        id: 'ds_t1_4',
-        tier: 1,
-        text: "Qu'est-ce qu'une valeur p (p-value) de 0.03 signifie généralement ?",
-        options: [
-          "Il y a 3% de chances que l'hypothèse nulle soit vraie.",
-          "Le résultat est faux à 97%.",
-          "Si l'hypothèse nulle est vraie, il y a 3% de chances d'observer ces données (ou plus extrêmes).",
-          "L'expérience est statistiquement insignifiante."
-        ],
-        correctAnswer: 2,
-        explanation: "C'est l'erreur d'interprétation la plus commune en stats, et elle est impardonnable. La p-value N'EST PAS la probabilité que ton hypothèse soit vraie ou fausse. C'est une probabilité conditionnelle : P(Données | Hypothèse Nulle). Elle te dit à quel point tes données sont 'surprenantes' si on suppose qu'il n'y a aucun effet réel. À 0.03, c'est rare (sous le seuil standard de 0.05), donc on rejette l'hypothèse nulle. Mais ça ne prouve rien en soi sur la vérité de l'hypothèse alternative."
-      },
-
-      // --- TIER 2 (Intermediate) ---
-      {
-        id: 'ds_t2_1',
-        tier: 2,
-        text: "Pourquoi utiliserait-on une forêt aléatoire (Random Forest) plutôt qu'un arbre de décision unique ?",
-        options: [
-          "Pour réduire le biais.",
-          "Pour réduire la variance et éviter l'overfitting.",
-          "Parce que c'est plus rapide à entraîner.",
-          "Pour avoir une meilleure interprétabilité."
-        ],
-        correctAnswer: 1,
-        explanation: "Un arbre de décision unique est très instable : change un peu les données, et l'arbre change complètement (Haute Variance). Il a tendance à overfitter massivement s'il est profond. La Random Forest utilise le principe du Bagging (Bootstrap Aggregating) : elle entraîne plein d'arbres sur des sous-ensembles aléatoires de données et de features, puis fait la moyenne de leurs prédictions. La 'Loi des Grands Nombres' fait que cette moyenne réduit drastiquement la variance (l'erreur due à la sensibilité aux données) sans trop augmenter le biais. C'est plus robuste."
-      },
-      {
-        id: 'ds_t2_2',
-        tier: 2,
-        text: "Quel est le problème du 'Vanishing Gradient' dans les RNNs ?",
-        options: [
-          "Les poids deviennent infinis.",
-          "Le modèle oublie les dépendances à long terme car le gradient tend vers 0.",
-          "Le taux d'apprentissage est trop élevé.",
-          "C'est un problème spécifique aux images."
-        ],
-        correctAnswer: 1,
-        explanation: "Dans un réseau de neurones profond (ou récurrent sur une longue séquence), l'entraînement se fait par rétropropagation (Backpropagation). On utilise la règle de la chaîne pour calculer les dérivées. Si tu multiplies plein de petits nombres (dérivées de fonctions d'activation comme Sigmoïde < 0.25) entre eux, le résultat tend exponentiellement vers 0. Conséquence : les poids des premières couches (ou du début de la séquence) ne sont jamais mis à jour. Le réseau n'apprend pas les relations à long terme. C'est pour ça qu'on utilise des LSTMs/GRUs ou des fonctions ReLU."
-      },
-      {
-        id: 'ds_t2_3',
-        tier: 2,
-        text: "Dans un problème de classification déséquilibré (99% classe A, 1% classe B), quelle métrique est la PIRE ?",
-        options: [
-          "F1-Score",
-          "Précision (Precision)",
-          "Exactitude (Accuracy)",
-          "Rappel (Recall)"
-        ],
-        correctAnswer: 2,
-        explanation: "L'Accuracy est un piège mortel ici. Si tu as 99 transactions légitimes et 1 fraude, un modèle stupide qui dit TOUJOURS 'Légitime' aura 99% d'Accuracy. Tu seras content, tu mettras en prod, et tu rateras 100% des fraudes. Dans ce cas, l'Accuracy ne mesure pas la compétence du modèle, mais la distribution des classes. Tu DOIS utiliser la Précision, le Rappel, le F1-Score ou l'AUC-ROC pour évaluer la capacité du modèle à distinguer la classe minoritaire."
-      },
-
-      // --- TIER 3 (Advanced) ---
-      {
-        id: 'ds_t3_1',
-        tier: 3,
-        text: "Explique le 'Kernel Trick' dans les SVM.",
-        options: [
-          "C'est une astuce pour réduire la dimensionnalité.",
-          "Ça permet de séparer des données non-linéaires en les projetant implicitement dans un espace de dimension supérieure.",
-          "Ça sert à régulariser les hyperparamètres.",
-          "C'est un hack pour accélérer le GPU."
-        ],
-        correctAnswer: 1,
-        explanation: "Les SVM (Support Vector Machines) sont des classifieurs linéaires. Ils cherchent un hyperplan pour séparer les données. Mais si tes données ne sont pas séparables linéairement (ex: un cercle au milieu d'un autre) ? L'idée est de projeter les données dans un espace 3D, 4D, ou infini où elles DEVIENNENT séparables linéairement. Le 'Trick' (Astuce), c'est qu'on n'a pas besoin de calculer les coordonnées réelles dans cet espace complexe (ce qui serait impossible). On a juste besoin du produit scalaire entre les points, que la 'Fonction Noyau' (Kernel) peut calculer directement et efficacement dans l'espace d'origine."
-      },
-      {
-        id: 'ds_t3_2',
-        tier: 3,
-        text: "Quelle est la différence conceptuelle entre Bagging et Boosting ?",
-        options: [
-          "Bagging entraine en série, Boosting en parallèle.",
-          "Bagging réduit la variance (parallèle), Boosting réduit le biais (séquentiel).",
-          "Bagging entraîne en parallèle (indépendants), Boosting en série (corrige les erreurs précédentes).",
-          "C'est la même chose."
-        ],
-        correctAnswer: 2,
-        explanation: "C'est une question d'architecture d'ensemble. Le BAGGING (Bootstrap Aggregating, ex: Random Forest) entraîne des modèles forts et complexes en PARALLÈLE, de manière indépendante, pour lisser leurs erreurs (réduction de Variance). Le BOOSTING (ex: XGBoost, AdaBoost, Gradient Boosting) entraîne des modèles faibles en SÉRIE. Chaque nouveau modèle tente spécifiquement de corriger les erreurs commises par la combinaison des modèles précédents. Le Boosting est une méthode d'optimisation itérative qui réduit principalement le BIAIS. Il est souvent plus performant mais plus sensible au bruit et aux outliers."
-      },
-
-      // --- TIER 4 (Impossible) ---
-      {
-        id: 'ds_t4_1',
-        tier: 4,
-        text: "Dans l'architecture Transformer, pourquoi l'encodage positionnel est-il mathématiquement indispensable ?",
-        options: [
-          "Pour indiquer au modèle la langue du texte.",
-          "Car l'attention est invariante par permutation; sans lui, le modèle voit un 'sac de mots'.",
-          "Pour augmenter la taille du vocabulaire.",
-          "Pour compresser les vecteurs d'entrée."
-        ],
-        correctAnswer: 1,
-        explanation: "Les architectures précédentes (RNN/LSTM) traitaient les mots séquentiellement, donc l'ordre était implicite. Le Transformer traite tout le texte en parallèle grâce au mécanisme de 'Self-Attention'. Mathématiquement, l'opération d'attention (Softmax(QK^T)) est invariante par permutation : si tu mélanges les mots de la phrase en entrée, le calcul d'attention donne le même résultat pour chaque mot. Le modèle ne saurait pas si 'Paul' est le sujet ou l'objet. L'Encodage Positionnel ajoute un vecteur (basé sur des sinus/cosinus) à chaque embedding d'entrée pour injecter une signature unique liée à la position, brisant cette symétrie."
-      },
-      {
-        id: 'ds_t4_2',
-        tier: 4,
-        text: "Théorème de l'Approximation Universelle : Que dit-il vraiment et quelle est sa limite pratique ?",
-        options: [
-          "Un réseau de neurones peut tout apprendre parfaitement.",
-          "Un réseau avec une seule couche cachée peut approximer n'importe quelle fonction continue, mais la largeur requise peut être irréaliste.",
-          "Le Deep Learning est la solution à tous les problèmes.",
-          "Il faut une infinité de couches pour tout résoudre."
-        ],
-        correctAnswer: 1,
-        explanation: "Le théorème affirme qu'un réseau de neurones feed-forward avec une seule couche cachée contenant un nombre fini de neurones peut approximer n'importe quelle fonction continue sur un compact de R^n avec une précision arbitraire. C'est puissant théoriquement car ça prouve que les NN sont des approximateurs universels. MAIS, le théorème ne dit pas qu'on peut APPRENDRE cette fonction (trouver les poids via gradient descent), ni que la taille de la couche cachée sera raisonnable. En pratique, pour des fonctions complexes, la largeur nécessaire peut être exponentielle. C'est pour ça qu'on préfère la Profondeur (Deep Learning) à la Largeur : c'est exponentiellement plus efficace en nombre de paramètres."
+        explanation: "Apprendre par cœur les données d'entraînement (Biais faible, Variance élevée) empêche de généraliser sur de nouvelles données."
       }
     ]
   },
   fullstack_dev: {
     id: 'fullstack_dev',
-    name: 'Fullstack & Patterns',
-    description: 'Vue.js, Java/PHP, Design Patterns. Pour les architectes, pas les maçons.',
+    name: 'Fullstack & Architecture',
+    description: 'Vue, Java, Algo, Réseaux, DevOps, DDD. Le test ultime.',
     questions: [
-      // --- TIER 1 (Basic) ---
+      // =================================================================================
+      // TIER 1: BASICS (Algo, Git, Web, Java, Vue)
+      // =================================================================================
       {
         id: 'fs_t1_1',
         tier: 1,
-        text: "Vue.js : Quelle est la différence principale entre `v-if` et `v-show` ?",
-        options: [
-          "Aucune, c'est du sucre syntaxique.",
-          "v-if modifie le CSS (display:none), v-show supprime l'élément du DOM.",
-          "v-if ajoute/supprime l'élément du DOM, v-show modifie juste le CSS (display:none).",
-          "v-show est pour les boucles."
-        ],
-        correctAnswer: 2,
-        explanation: "Base de Vue.js. `v-if` est un rendu conditionnel 'réel' : si la condition est fausse, le bloc n'existe pas dans le DOM (détruit/recréé). `v-show` rend TOUJOURS l'élément mais toggle la propriété CSS `display`. Si tu as un élément qui change d'état 10 fois par seconde, utilise `v-show` pour la performance. Si la condition change rarement, `v-if` est plus propre."
+        text: "Vue.js : v-if vs v-show ?",
+        options: ["Aucune.", "v-if manipule le DOM, v-show manipule le CSS.", "v-show est déprécié.", "v-if pour les boucles."],
+        correctAnswer: 1,
+        explanation: "`v-if` est lazy (détruit/crée). `v-show` utilise `display: none`. Utilise v-show pour les toggles fréquents."
       },
       {
         id: 'fs_t1_2',
         tier: 1,
-        text: "Spring Boot : À quoi sert l'annotation `@Autowired` (ou l'injection par constructeur) ?",
-        options: [
-          "À connecter la base de données.",
-          "À permettre à Spring d'injecter automatiquement les dépendances (Beans) nécessaires.",
-          "À rendre une classe publique.",
-          "À démarrer le serveur Tomcat."
-        ],
-        correctAnswer: 1,
-        explanation: "C'est le cœur de l'Inversion de Contrôle (IoC). Au lieu de faire `new Service()` dans ton contrôleur (couplage fort), tu demandes à Spring de te fournir une instance gérée (Bean). L'injection par constructeur est recommandée aujourd'hui pour garantir que le Bean est immuable et testable."
+        text: "Algo : Complexité de l'accès à un tableau par index ?",
+        options: ["O(n)", "O(log n)", "O(1)", "O(n^2)"],
+        correctAnswer: 2,
+        explanation: "C'est un accès mémoire direct. Adresse = Base + (Index * Taille). Instantané."
       },
       {
         id: 'fs_t1_3',
         tier: 1,
-        text: "Design Patterns : Quel est le but principal du pattern 'Singleton' ?",
-        options: [
-          "S'assurer qu'une classe a des instances illimitées.",
-          "Garantir qu'une classe n'a qu'une seule instance et fournir un point d'accès global à celle-ci.",
-          "Créer des objets complexes étape par étape.",
-          "Transformer l'interface d'une classe en une autre."
-        ],
+        text: "Réseau : Que signifie DNS ?",
+        options: ["Data Network System.", "Domain Name System.", "Digital Name Service.", "Domain Network Server."],
         correctAnswer: 1,
-        explanation: "Le Singleton est l'un des patterns les plus connus (et abusés). Il garantit l'unicité (ex: connexion DB, Configuration). ATTENTION : C'est souvent considéré comme un anti-pattern aujourd'hui car il introduit un état global caché, rend les tests unitaires difficiles (mocking compliqué) et crée un couplage fort. En Spring, les Beans sont des Singletons par défaut, mais gérés par le conteneur (bien mieux)."
+        explanation: "L'annuaire d'Internet. Il traduit 'google.com' (humain) en '142.250.x.x' (machine)."
       },
       {
         id: 'fs_t1_4',
         tier: 1,
-        text: "SQL : Quelle est la différence entre `INNER JOIN` et `LEFT JOIN` ?",
-        options: [
-          "INNER JOIN est plus rapide.",
-          "INNER JOIN ne retourne que les correspondances exactes. LEFT JOIN retourne tout ce qu'il y a à gauche, même sans correspondance (NULL).",
-          "LEFT JOIN est déprécié.",
-          "INNER JOIN est pour les nombres uniquement."
-        ],
+        text: "Git : Commande pour voir l'état des fichiers ?",
+        options: ["git log", "git status", "git diff", "git check"],
         correctAnswer: 1,
-        explanation: "Si tu ne sais pas faire une jointure, tu n'es pas fullstack, tu es stagiaire HTML. `INNER` = Intersection (A ∩ B). `LEFT` = Tout A + (B si existe sinon NULL). C'est fondamental pour ne pas perdre de données quand tu requêtes des relations optionnelles."
+        explanation: "`git status` te dit ce qui est stagé, modifié ou non suivi. La commande que tu tapes 50 fois par jour."
       },
-
-      // --- TIER 2 (Intermediate) ---
+      {
+        id: 'fs_t1_5',
+        tier: 1,
+        text: "HTML : Balise sémantique pour le contenu principal ?",
+        options: ["<div id='main'>", "<main>", "<section>", "<article>"],
+        correctAnswer: 1,
+        explanation: "Utilise `<main>` pour le contenu unique de la page. Aide l'accessibilité et le SEO. Arrête avec les `div` partout."
+      },
+      {
+        id: 'fs_t1_6',
+        tier: 1,
+        text: "Java : ArrayList vs Array ?",
+        options: ["ArrayList est redimensionnable dynamiquement, Array est fixe.", "Array est plus lent.", "ArrayList ne peut stocker que des String.", "Pareil."],
+        correctAnswer: 0,
+        explanation: "Un Array `new int[5]` a une taille fixe. `ArrayList` grandit automatiquement (recopie le tableau sous le capot quand il est plein)."
+      },
+      {
+        id: 'fs_t1_7',
+        tier: 1,
+        text: "DevOps : Qu'est-ce que Docker ?",
+        options: ["Une machine virtuelle.", "Une plateforme de conteneurisation pour packager une app et ses dépendances.", "Un serveur web.", "Un langage."],
+        correctAnswer: 1,
+        explanation: "Docker n'est PAS une VM. Il partage le kernel de l'OS hôte mais isole les processus. 'Build once, run anywhere'."
+      },
+      {
+        id: 'fs_t1_8',
+        tier: 1,
+        text: "HTTP : Méthode pour supprimer une ressource ?",
+        options: ["REMOVE", "DELETE", "Un POST avec body null.", "CLEAR"],
+        correctAnswer: 1,
+        explanation: "Respecte la sémantique REST. `DELETE /users/1`. N'utilise pas GET pour ça !"
+      },
+      {
+        id: 'fs_t1_9',
+        tier: 1,
+        text: "CSS : Marge intérieure d'un élément ?",
+        options: ["Margin", "Border", "Padding", "Spacing"],
+        correctAnswer: 2,
+        explanation: "Margin = extérieur. Padding = intérieur (entre le bord et le contenu)."
+      },
+      {
+        id: 'fs_t1_10',
+        tier: 1,
+        text: "Algo : Qu'est-ce qu'un Booléen ?",
+        options: ["Un nombre entier.", "Une valeur Vrai ou Faux.", "Une chaine de caractères.", "Un tableau."],
+        correctAnswer: 1,
+        explanation: "La base de la logique binaire. 0 ou 1. True ou False."
+      },
+      {
+        id: 'fs_t1_11',
+        tier: 1,
+        text: "Git : `git clone` ?",
+        options: ["Copie un fichier.", "Télécharge un dépôt distant entier sur ta machine.", "Crée une branche.", "Fusionne le code."],
+        correctAnswer: 1,
+        explanation: "La première commande pour récupérer un projet. Récupère tout l'historique."
+      },
+      {
+        id: 'fs_t1_12',
+        tier: 1,
+        text: "Java : `public` vs `private` ?",
+        options: ["Aucune.", "Public est accessible partout, Private uniquement dans la classe.", "Private est pour les variables statiques.", "Public est plus rapide."],
+        correctAnswer: 1,
+        explanation: "Encapsulation. Cache tes données (`private`), expose tes comportements (`public`)."
+      },
+      {
+        id: 'fs_t1_13',
+        tier: 1,
+        text: "Linux : Commande pour lister les fichiers ?",
+        options: ["show", "ls", "list", "dir"],
+        correctAnswer: 1,
+        explanation: "`ls -la` est ton meilleur ami."
+      },
+      {
+        id: 'fs_t1_14',
+        tier: 1,
+        text: "Architecture : Qu'est-ce que le Frontend ?",
+        options: ["La base de données.", "La partie visible par l'utilisateur (Navigateur/App).", "Le serveur.", "L'API."],
+        correctAnswer: 1,
+        explanation: "HTML/CSS/JS. Ce qui s'exécute sur la machine du client."
+      },
+      {
+        id: 'fs_t1_15',
+        tier: 1,
+        text: "Vue.js : Data binding bidirectionnel ?",
+        options: ["v-bind", "v-model", "v-on", "v-text"],
+        correctAnswer: 1,
+        explanation: "`v-model` synchronise l'input et la variable JS automatiquement. Magique."
+      },
+      
+      // =================================================================================
+      // TIER 2: INTERMEDIATE (Network, DB, Java, DevOps)
+      // =================================================================================
       {
         id: 'fs_t2_1',
         tier: 2,
-        text: "Design Patterns : Lequel de ces patterns est de type 'Comportemental' (Behavioral) ?",
-        options: [
-          "Factory Method",
-          "Observer",
-          "Adapter",
-          "Builder"
-        ],
+        text: "Réseau : TCP vs UDP ?",
+        options: ["UDP est sécurisé.", "TCP garantit l'ordre et la livraison (Fiable, lent). UDP envoie sans vérifier (Rapide, Streaming/Jeux).", "TCP est pour la vidéo.", "UDP est pour les emails."],
         correctAnswer: 1,
-        explanation: "Observer est comportemental : il définit une dépendance un-à-plusieurs entre objets pour que quand l'un change d'état, tous les autres soient notifiés (base de RxJS, des EventListeners, et de la réactivité Vue). Factory et Builder sont Créationnels. Adapter est Structurel. Connaître la catégorie t'aide à savoir QUAND l'utiliser."
+        explanation: "TCP = 'Allo ? Tu m'entends ? Oui. OK j'envoie'. UDP = 'J'ENVOIE TOUT TANT PIS SI TU RATES'."
       },
       {
         id: 'fs_t2_2',
         tier: 2,
-        text: "Laravel / ORM : Qu'est-ce que le problème 'N+1' et comment le résoudre avec Eloquent ?",
-        options: [
-          "Un bug de mathématiques dans PHP.",
-          "C'est quand tu fais une boucle qui exécute une requête SQL par itération (ex: récupérer l'auteur pour chaque livre). Solution : Eager Loading (`with()`).",
-          "C'est quand tu as trop de tables.",
-          "C'est une erreur de pagination."
-        ],
+        text: "DB : Index SQL. Comment ça marche ?",
+        options: ["Magie noire.", "Structure de données (B-Tree) qui trie les pointeurs vers les données pour éviter le Full Table Scan.", "Compresse les données.", "Copie la table."],
         correctAnswer: 1,
-        explanation: "Le tueur de performance #1 des apps Laravel/Hibernate. Code coupable : `foreach ($books as $book) { echo $book->author->name; }`. Si tu as 50 livres, tu fais 1 requête pour les livres + 50 requêtes pour les auteurs = 51 requêtes. Avec `$books = Book::with('author')->get()`, tu fais 2 requêtes. Point final."
+        explanation: "Comme l'index à la fin d'un livre. Sans lui, tu dois lire tout le livre pour trouver 'Harry Potter'."
       },
       {
         id: 'fs_t2_3',
         tier: 2,
-        text: "Design Patterns : Dans quel cas utiliserais-tu le pattern 'Strategy' ?",
-        options: [
-          "Pour créer une seule instance d'une classe.",
-          "Pour définir une famille d'algorithmes, les encapsuler chacun, et les rendre interchangeables à l'exécution.",
-          "Pour adapter une interface incompatible.",
-          "Pour notifier des abonnés d'un changement."
-        ],
+        text: "Algo : Pile (Stack) vs File (Queue) ?",
+        options: ["Pareil.", "Stack = LIFO (Last In First Out). Queue = FIFO (First In First Out).", "Stack = FIFO.", "Queue est pour le stockage."],
         correctAnswer: 1,
-        explanation: "Indispensable pour éviter les `if/else` géants. Exemple : Paiement. Tu as une interface `PaymentStrategy`. Tu as des implémentations `PayPalStrategy`, `StripeStrategy`. Ton code client utilise l'interface. Tu peux changer de méthode de paiement à la volée sans toucher au code métier. C'est le 'O' de SOLID (Open/Closed Principle)."
+        explanation: "Stack = Assiettes sales (tu laves la dernière posée). Queue = File d'attente au supermarché."
+      },
+      {
+        id: 'fs_t2_4',
+        tier: 2,
+        text: "Architecture : MVC ?",
+        options: ["Model View Controller.", "Most Valuable Code.", "Model View Component.", "Main View Class."],
+        correctAnswer: 0,
+        explanation: "Séparation des soucis. Model (Données), View (UI), Controller (Logique/Chef d'orchestre)."
+      },
+      {
+        id: 'fs_t2_5',
+        tier: 2,
+        text: "DevOps : CI/CD ?",
+        options: ["Code Intégral.", "Continuous Integration / Continuous Delivery. Automatiser les tests et le déploiement.", "Certificat Informatique.", "Clean Code."],
+        correctAnswer: 1,
+        explanation: "Ne déploie jamais à la main (FTP). Le pipeline doit tester, builder et déployer automatiquement à chaque push."
+      },
+      {
+        id: 'fs_t2_6',
+        tier: 2,
+        text: "Git : `git stash` ?",
+        options: ["Supprime tout.", "Met de côté les modifications non committées temporairement pour nettoyer le workspace.", "Crée une branche.", "Fusionne."],
+        correctAnswer: 1,
+        explanation: "Utile quand tu dois changer de branche en urgence mais que ton travail n'est pas fini."
+      },
+      {
+        id: 'fs_t2_7',
+        tier: 2,
+        text: "Java : `HashMap` complexité moyenne ?",
+        options: ["O(n)", "O(log n)", "O(1) pour get/put.", "O(n^2)"],
+        correctAnswer: 2,
+        explanation: "Grâce au hachage, on trouve la case mémoire directement. Attention aux collisions (pire cas O(n))."
+      },
+      {
+        id: 'fs_t2_8',
+        tier: 2,
+        text: "Web : Cookies vs LocalStorage ?",
+        options: ["Pareil.", "Cookies sont envoyés au serveur à CHAQUE requête (petits). LocalStorage reste sur le client (gros).", "LocalStorage expire.", "Cookies sont plus gros."],
+        correctAnswer: 1,
+        explanation: "Utilise Cookies pour l'Auth (HttpOnly). LocalStorage pour les préférences UI."
+      },
+      {
+        id: 'fs_t2_9',
+        tier: 2,
+        text: "Security : XSS (Cross Site Scripting) ?",
+        options: ["Hack serveur.", "Injection de script JS malveillant dans la page vue par d'autres utilisateurs.", "Vol de mot de passe.", "Erreur CSS."],
+        correctAnswer: 1,
+        explanation: "Si tu affiches un commentaire utilisateur sans l'échapper, il peut exécuter `<script>stealCookies()</script>`."
+      },
+      {
+        id: 'fs_t2_10',
+        tier: 2,
+        text: "Linux : `chmod 777` ?",
+        options: ["Bonne idée.", "Donne TOUS les droits (Lecture/Écriture/Exécution) à TOUT LE MONDE. Danger de sécurité absolu.", "Supprime le fichier.", "Rend invisible."],
+        correctAnswer: 1,
+        explanation: "Ne fais jamais ça en prod. Utilise `644` ou `755`."
+      },
+      {
+        id: 'fs_t2_11',
+        tier: 2,
+        text: "Java : `Optional<T>` ?",
+        options: ["Optionnel.", "Conteneur pour éviter les `NullPointerException`. Force à gérer le cas 'vide'.", "Liste.", "Variable globale."],
+        correctAnswer: 1,
+        explanation: "Fini les `if (x != null)`. Utilise `.orElse()` ou `.map()`."
+      },
+      {
+        id: 'fs_t2_12',
+        tier: 2,
+        text: "Laravel : Migration ?",
+        options: ["Voyage.", "Versionning du schéma de base de données (Code -> Table).", "Import de données.", "Copie de site."],
+        correctAnswer: 1,
+        explanation: "Permet de partager la structure de la DB avec l'équipe. `php artisan migrate`."
+      },
+      {
+        id: 'fs_t2_13',
+        tier: 2,
+        text: "Réseau : Port standard HTTPS ?",
+        options: ["80", "443", "8080", "22"],
+        correctAnswer: 1,
+        explanation: "80 pour HTTP. 443 pour HTTPS (Sécurisé)."
+      },
+      {
+        id: 'fs_t2_14',
+        tier: 2,
+        text: "Algo : Tri rapide (QuickSort) complexité moyenne ?",
+        options: ["O(n)", "O(n log n)", "O(n^2)", "O(1)"],
+        correctAnswer: 1,
+        explanation: "Le standard des tris. Diviser pour régner. Pire cas O(n^2) si pivot mal choisi."
+      },
+      {
+        id: 'fs_t2_15',
+        tier: 2,
+        text: "Vue.js : Props Drilling ?",
+        options: ["Bricolage.", "Passer des données de Grand-Parent -> Parent -> Enfant inutilement.", "Architecture.", "Optimisation."],
+        correctAnswer: 1,
+        explanation: "Utilise Provide/Inject ou Pinia pour éviter ça."
+      },
+      {
+        id: 'fs_t2_16',
+        tier: 2,
+        text: "Integration : JSON ?",
+        options: ["Java Serialized Object.", "JavaScript Object Notation. Format d'échange de données textuel léger.", "Base de données.", "Protocole."],
+        correctAnswer: 1,
+        explanation: "Le standard du web moderne. Plus léger que XML."
+      },
+      {
+        id: 'fs_t2_17',
+        tier: 2,
+        text: "Pattern : Dependency Injection ?",
+        options: ["Virus.", "Fournir les objets dont une classe a besoin de l'extérieur plutôt que de les créer dedans.", "Singleton.", "Héritage."],
+        correctAnswer: 1,
+        explanation: "Rend le code testable (on peut injecter des Mocks)."
+      },
+      {
+        id: 'fs_t2_18',
+        tier: 2,
+        text: "Git : `git branch` ?",
+        options: ["Plante l'arbre.", "Liste, crée ou supprime des branches de développement parallèles.", "Fusionne.", "Envoie."],
+        correctAnswer: 1,
+        explanation: "Ne code jamais sur `main`. Crée une branche `feature/x`."
       },
 
-      // --- TIER 3 (Advanced) ---
+      // =================================================================================
+      // TIER 3: ADVANCED (Arch, DDD, Advanced Algo, Spring Deep Dive)
+      // =================================================================================
       {
         id: 'fs_t3_1',
         tier: 3,
-        text: "Design Patterns : Quelle est la différence entre 'Abstract Factory' et 'Factory Method' ?",
-        options: [
-          "Aucune, c'est pareil.",
-          "Factory Method utilise l'héritage pour décider quel objet instancier. Abstract Factory utilise la composition pour créer des familles d'objets liés.",
-          "Abstract Factory crée des classes abstraites.",
-          "Factory Method est statique."
-        ],
+        text: "DDD : Qu'est-ce qu'un 'Aggregate Root' ?",
+        options: ["Un total.", "L'entité principale qui contrôle l'accès et garantit la cohérence d'un groupe d'objets (Transaction Boundary).", "Une table SQL.", "Un service."],
         correctAnswer: 1,
-        explanation: "Subtile mais crucial. Factory Method : Une méthode abstraite `createAnimal()` dans une classe, que les sous-classes `DogFactory` implémentent. Abstract Factory : Une interface qui contient PLUSIEURS méthodes de création (`createChair()`, `createSofa()`) pour créer toute une famille de produits cohérents (ex: Meubles Victoriens vs Modernes) sans spécifier leurs classes concrètes."
+        explanation: "Tu ne modifies pas une 'Ligne de Commande' directement. Tu passes par la 'Commande' (Aggregate Root) pour qu'elle recalcule le total."
       },
       {
         id: 'fs_t3_2',
         tier: 3,
-        text: "Node.js : Comment détecter et débugger une fuite de mémoire (Memory Leak) ?",
-        options: [
-          "En redémarrant le serveur toutes les heures.",
-          "En regardant les logs d'erreur.",
-          "En utilisant l'inspecteur Chrome (Heap Snapshot) pour comparer l'allocation mémoire avant/après une charge.",
-          "En augmentant la RAM du serveur."
-        ],
-        correctAnswer: 2,
-        explanation: "Augmenter la RAM ne fait que repousser le crash. Une fuite, c'est des objets référencés qui ne sont pas Garbage Collected (ex: listeners globaux, closures infinies). Tu dois prendre un Snapshot du Heap, stresser l'app, en prendre un 2ème, et comparer les objets qui n'ont pas disparu. Si tu ne sais pas faire ça, ton app Node ne tiendra pas la prod."
+        text: "Réseau : Handshake TCP 3-way ?",
+        options: ["Hello, Hi, Bye.", "SYN, SYN-ACK, ACK.", "Ping, Pong, Pang.", "Connect, Accept, Send."],
+        correctAnswer: 1,
+        explanation: "Client: 'Je veux connecter (SYN)'. Serveur: 'OK, j'accepte (SYN-ACK)'. Client: 'Bien reçu, on commence (ACK)'."
       },
       {
         id: 'fs_t3_3',
         tier: 3,
-        text: "Design Patterns : Le pattern 'Adapter' (Wrapper) est utile quand...",
-        options: [
-          "Tu veux limiter l'accès à une classe.",
-          "Tu veux faire travailler ensemble des classes aux interfaces incompatibles.",
-          "Tu veux ajouter des fonctionnalités dynamiquement.",
-          "Tu veux cloner des objets."
-        ],
+        text: "Spring : `@Transactional(readOnly = true)` ?",
+        options: ["Inutile.", "Optimisation de perf (pas de Dirty Checking par Hibernate) et clarté d'intention.", "Bloque la lecture.", "Sécurité."],
         correctAnswer: 1,
-        explanation: "Le sauveur des intégrations Legacy. Tu as une vieille classe `OldSystem` qui attend XML. Tu as un nouveau `ModernSystem` qui envoie JSON. Tu crées un Adapter qui implémente l'interface attendue par le vieux système, prend le JSON, le convertit en XML, et appelle le vieux système. Le code client ne voit rien."
+        explanation: "Dit à Hibernate : 'Je ne modifierai rien, ne perds pas de temps à vérifier les changements'."
+      },
+      {
+        id: 'fs_t3_4',
+        tier: 3,
+        text: "Algo : Arbre Binaire de Recherche (BST) ?",
+        options: ["Arbre aléatoire.", "Arbre où pour chaque nœud : gauche < nœud < droite. Recherche en O(log n).", "Liste chainée.", "Tableau."],
+        correctAnswer: 1,
+        explanation: "Structure efficace pour rechercher et trier. Si déséquilibré, devient une liste (O(n))."
+      },
+      {
+        id: 'fs_t3_5',
+        tier: 3,
+        text: "DDD : Value Object vs Entity ?",
+        options: ["Pareil.", "Entity a une Identité (ID) qui persiste. Value Object est défini par ses attributs (immuable, interchangeable).", "VO est pour la DB.", "Entity est en lecture seule."],
+        correctAnswer: 1,
+        explanation: "Un User est une Entity (si il change de nom, c'est le même User). Une Couleur (Rouge) est un Value Object (on ne modifie pas Rouge, on le remplace)."
+      },
+      {
+        id: 'fs_t3_6',
+        tier: 3,
+        text: "Architecture : Hexagonale (Ports & Adapters) ?",
+        options: ["Forme géométrique.", "Isoler le domaine métier (Cœur) des détails techniques (DB, UI, API) via des interfaces (Ports).", "Microservices.", "MVC."],
+        correctAnswer: 1,
+        explanation: "Ton métier ne doit pas dépendre de Laravel ou Spring. Il doit être pur. L'infrastructure dépend du métier."
+      },
+      {
+        id: 'fs_t3_7',
+        tier: 3,
+        text: "DevOps : Kubernetes Pod ?",
+        options: ["Un conteneur.", "La plus petite unité déployable. Peut contenir un ou plusieurs conteneurs qui partagent IP et stockage.", "Un serveur.", "Un cluster."],
+        correctAnswer: 1,
+        explanation: "Souvent 1 Pod = 1 Conteneur, mais parfois on ajoute un 'Sidecar' (ex: logging) dans le même Pod."
+      },
+      {
+        id: 'fs_t3_8',
+        tier: 3,
+        text: "Git : `git cherry-pick` ?",
+        options: ["Cueillir des cerises.", "Appliquer un commit spécifique d'une autre branche sur la branche courante.", "Supprimer un commit.", "Fusionner tout."],
+        correctAnswer: 1,
+        explanation: "Chirurgical. 'Je veux juste CE fix de la branche dev, pas tout le reste'."
+      },
+      {
+        id: 'fs_t3_9',
+        tier: 3,
+        text: "Java : Stream API (`.map`, `.filter`) ?",
+        options: ["Pour les vidéos.", "Traitement fonctionnel des collections. Lazy evaluation.", "Boucles for.", "I/O."],
+        correctAnswer: 1,
+        explanation: "Code déclaratif plus lisible. `users.stream().filter(u -> u.active).map(u -> u.name)`."
+      },
+      {
+        id: 'fs_t3_10',
+        tier: 3,
+        text: "Web : CORS Preflight (OPTIONS) ?",
+        options: ["Optionnel.", "Requête envoyée par le navigateur avant la vraie requête (PUT/DELETE) pour vérifier si le serveur accepte l'origine.", "Erreur.", "Login."],
+        correctAnswer: 1,
+        explanation: "Sécurité navigateur. Si tu vois une requête OPTIONS échouer, c'est tes headers CORS qui sont mauvais."
+      },
+      {
+        id: 'fs_t3_11',
+        tier: 3,
+        text: "DB : Transaction Isolation Levels - Dirty Read ?",
+        options: ["Lecture sale.", "Lire une donnée modifiée par une autre transaction NON committée. Dangereux.", "Lire une donnée ancienne.", "Erreur disque."],
+        correctAnswer: 1,
+        explanation: "Si la transaction A rollback, la transaction B a travaillé sur une donnée fantôme."
+      },
+      {
+        id: 'fs_t3_12',
+        tier: 3,
+        text: "Pattern : Proxy ?",
+        options: ["VPN.", "Intermédiaire qui contrôle l'accès à un objet (Lazy loading, Sécurité, Cache).", "Copie.", "Factory."],
+        correctAnswer: 1,
+        explanation: "Spring/Hibernate l'utilisent partout. C'est comme ça que le Lazy Loading DB fonctionne."
+      },
+      {
+        id: 'fs_t3_13',
+        tier: 3,
+        text: "General : SOLID - Liskov Substitution ?",
+        options: ["Compliqué.", "Une sous-classe doit pouvoir remplacer sa classe parente sans casser le programme.", "Héritage interdit.", "Interfaces."],
+        correctAnswer: 1,
+        explanation: "Si `Carre extends Rectangle`, et que modifier la hauteur du rectangle modifie sa largeur (car c'est un carré), tu violes Liskov car tu changes le comportement attendu."
+      },
+      {
+        id: 'fs_t3_14',
+        tier: 3,
+        text: "Vue.js : Vuex/Pinia Store ?",
+        options: ["Magasin.", "Gestion d'état global centralisé (Single Source of Truth).", "Base de données.", "LocalStorage."],
+        correctAnswer: 1,
+        explanation: "Évite le prop drilling. Tout l'état partagé vit au même endroit."
+      },
+      {
+        id: 'fs_t3_15',
+        tier: 3,
+        text: "Laravel : Eloquent Accessors ?",
+        options: ["Accès DB.", "Attributs virtuels calculés (`getFirstNameAttribute`).", "Relations.", "Sécurité."],
+        correctAnswer: 1,
+        explanation: "Permet de formater une donnée à la sortie du modèle sans toucher la DB."
+      },
+      {
+        id: 'fs_t3_16',
+        tier: 3,
+        text: "Git : `git reset --hard` ?",
+        options: ["Reset doux.", "Détruit TOUTES les modifications locales et remet l'état au commit visé. Irréversible (ou presque).", "Annule le dernier commit mais garde les fichiers.", "Nettoie."],
+        correctAnswer: 1,
+        explanation: "La commande 'Je veux tout oublier'. Danger : tu perds ton travail non committé."
+      },
+      {
+        id: 'fs_t3_17',
+        tier: 3,
+        text: "Réseau : Websockets vs HTTP ?",
+        options: ["Pareil.", "HTTP est requête/réponse (Unidirectionnel). Websocket est un tunnel persistant bidirectionnel temps réel.", "Websocket est plus lent.", "HTTP est pour le chat."],
+        correctAnswer: 1,
+        explanation: "Pour un chat ou un jeu, HTTP (Polling) est inefficace. Websocket garde la ligne ouverte."
+      },
+      {
+        id: 'fs_t3_18',
+        tier: 3,
+        text: "DevOps : Docker Layer Caching ?",
+        options: ["Cache navigateur.", "Docker réutilise les couches (lignes du Dockerfile) inchangées pour accélérer le build.", "Stockage.", "Erreur."],
+        correctAnswer: 1,
+        explanation: "Mets `COPY . .` à la FIN du Dockerfile, après `npm install`. Sinon tu casses le cache à chaque modif de code."
       },
 
-      // --- TIER 4 (Impossible) ---
+      // =================================================================================
+      // TIER 4: EXPERT (System Design, Deep Internals, Advanced Arch)
+      // =================================================================================
       {
         id: 'fs_t4_1',
         tier: 4,
-        text: "Architecture : CQRS (Command Query Responsibility Segregation). Quel est le principe et le coût ?",
-        options: [
-          "Séparer le code en backend/frontend. Coût : Latence.",
-          "Séparer les modèles de lecture (Query) et d'écriture (Command). Coût : Complexité accrue et Consistance Éventuelle.",
-          "Utiliser deux bases de données identiques. Coût : Stockage.",
-          "C'est un pattern pour les API REST."
-        ],
+        text: "DDD : Ubiquitous Language ?",
+        options: ["Anglais.", "Langage commun rigoureux partagé entre Devs et Experts Métier, utilisé dans le Code et les Specs.", "Jargon technique.", "SQL."],
         correctAnswer: 1,
-        explanation: "Dans une app complexe, le modèle pour ÉCRIRE (règles métiers validation, 3e forme normale) est souvent différent du modèle optimisé pour LIRE (DTO plats, jointures pré-calculées). CQRS les sépare physiquement. Tu peux scaler le Read indépendamment du Write. Le prix à payer ? La complexité de synchronisation. Si tu écris dans DB1, DB2 (lecture) n'est pas à jour instantanément (Eventual Consistency). À n'utiliser que si nécessaire."
+        explanation: "Si l'expert dit 'Client' et tu codes 'User', le projet échouera. Le code doit refléter le métier."
       },
       {
         id: 'fs_t4_2',
         tier: 4,
-        text: "Java/Spring : Comment fonctionne `@Transactional` sous le capot et quel est le piège de l'appel interne ?",
-        options: [
-          "Ça ouvre une connexion JDBC magique.",
-          "Ça utilise AOP (Aspect Oriented Programming) via un Proxy. Si tu appelles `this.maMethodeTransactionnelle()` depuis la même classe, le Proxy est contourné et la transaction n'est JAMAIS créée.",
-          "Ça locke toute la table.",
-          "Ça marche toujours, peu importe d'où on l'appelle."
-        ],
+        text: "Algo : Complexité spatiale de MergeSort ?",
+        options: ["O(1)", "O(n) - Besoin de mémoire auxiliaire pour la fusion.", "O(log n)", "O(n^2)"],
         correctAnswer: 1,
-        explanation: "Le piège classique qui a fait perdre des millions. Spring enveloppe ta classe dans un Proxy qui gère le `begin/commit/rollback`. Quand tu appelles une méthode depuis l'extérieur, tu passes par le Proxy -> Transaction OK. Quand tu fais un appel interne (`this.method()`), tu appelles directement l'objet réel, en contournant le Proxy -> PAS de Transaction. Le code tourne, mais rien n'est rollback en cas d'erreur. Silencieux et mortel. C'est un exemple du pattern Proxy en action."
+        explanation: "Contrairement à QuickSort (in-place), MergeSort crée des tableaux temporaires. À savoir pour l'embarqué."
+      },
+      {
+        id: 'fs_t4_3',
+        tier: 4,
+        text: "DB : Optimistic Locking vs Pessimistic ?",
+        options: ["Optimiste espère.", "Pessimiste verrouille la ligne (SELECT FOR UPDATE). Optimiste vérifie une version à l'écriture.", "Pessimiste est plus rapide.", "Optimiste n'est pas sûr."],
+        correctAnswer: 1,
+        explanation: "Optimiste (colonne `version`) est mieux pour le web (pas de lock DB long). Si version a changé entre lecture et écriture -> Exception."
+      },
+      {
+        id: 'fs_t4_4',
+        tier: 4,
+        text: "System Design : Rate Limiting algorithms ?",
+        options: ["Block IP.", "Token Bucket, Leaky Bucket, Fixed Window.", "Firewall.", "Captcha."],
+        correctAnswer: 1,
+        explanation: "Token Bucket permet des bursts (rafales). Leaky Bucket lisse le trafic. Indispensable pour protéger ton API."
+      },
+      {
+        id: 'fs_t4_5',
+        tier: 4,
+        text: "Java : Classloader Hierarchy ?",
+        options: ["Bootstrap -> Platform -> App (System).", "System -> App.", "Flat.", "Dynamic."],
+        correctAnswer: 0,
+        explanation: "Bootstrap charge le cœur Java (rt.jar). App charge ton classpath. Délégation parent-first."
+      },
+      {
+        id: 'fs_t4_6',
+        tier: 4,
+        text: "Réseau : CDN (Content Delivery Network) ?",
+        options: ["Disque dur.", "Réseau de serveurs géographiquement distribués pour servir le contenu statique au plus près de l'utilisateur (Latence).", "VPN.", "DNS."],
+        correctAnswer: 1,
+        explanation: "Réduit le TTFB (Time To First Byte) et décharge ton serveur d'origine."
+      },
+      {
+        id: 'fs_t4_7',
+        tier: 4,
+        text: "Git : `git bisect` ?",
+        options: ["Couper en deux.", "Recherche binaire automatisée pour trouver quel commit a introduit un bug.", "Fusionner.", "Nettoyer."],
+        correctAnswer: 1,
+        explanation: "L'arme ultime du débogage. 'Ce bug n'était pas là hier'. Git trouve le coupable en 5 étapes sur 100 commits."
+      },
+      {
+        id: 'fs_t4_8',
+        tier: 4,
+        text: "Architecture : Event-Driven - Idempotence ?",
+        options: ["Inutile.", "Capacité à traiter le même événement N fois sans changer le résultat final. Crucial car les Queues garantissent 'At Least Once'.", "Performance.", "Sécurité."],
+        correctAnswer: 1,
+        explanation: "Ton consumer DOIT gérer les doublons. Sinon tu envoies 2 mails de confirmation."
+      },
+      {
+        id: 'fs_t4_9',
+        tier: 4,
+        text: "Vue 3 : Virtual DOM diffing algorithm ?",
+        options: ["Scan tout.", "Heuristiques : compare même niveau, utilise les clés (`key`) pour réordonner, ignore les sous-arbres statiques (Static Hoisting).", "Pas de VDOM.", "Lent."],
+        correctAnswer: 1,
+        explanation: "Vue 3 optimise massivement en sortant les parties statiques du template de la boucle de rendu."
+      },
+      {
+        id: 'fs_t4_10',
+        tier: 4,
+        text: "Security : OAuth 2.0 flows ?",
+        options: ["Login/Pass.", "Authorization Code (Serveur), Implicit (Déprécié), Client Credentials (Machine-to-Machine).", "JWT.", "Cookie."],
+        correctAnswer: 1,
+        explanation: "Authorization Code + PKCE est le standard pour les SPA/Mobiles."
+      },
+      {
+        id: 'fs_t4_11',
+        tier: 4,
+        text: "Java : Memory Model - `Happens-Before` ?",
+        options: ["Avant.", "Garantie qu'une écriture mémoire par un thread est visible par un autre thread. Base de la synchro.", "Temps.", "Ordre aléatoire."],
+        correctAnswer: 1,
+        explanation: "Sans ça, le compilateur ou le CPU peut réordonner tes instructions et casser ton code multithread."
+      },
+      {
+        id: 'fs_t4_12',
+        tier: 4,
+        text: "DB : Sharding vs Partitioning ?",
+        options: ["Pareil.", "Partitioning = diviser une table dans la MÊME instance. Sharding = diviser les données sur PLUSIEURS serveurs physiques.", "Index.", "Backup."],
+        correctAnswer: 1,
+        explanation: "Sharding permet le 'Horizontal Scaling' infini, mais complexifie les jointures et transactions."
+      },
+      {
+        id: 'fs_t4_13',
+        tier: 4,
+        text: "General : Qu'est-ce que le Teapot (418) ?",
+        options: ["Erreur.", "I'm a teapot. Poisson d'avril IETF (HTCPCP).", "Bug serveur.", "Café."],
+        correctAnswer: 1,
+        explanation: "Culture G. HTTP 418. Si tu ne le connais pas, tu manques d'humour geek."
+      },
+      {
+        id: 'fs_t4_14',
+        tier: 4,
+        text: "Laravel : Facades vs Dependency Injection ?",
+        options: ["Facades sont mieux.", "Facades = Accès statique (Service Locator) pratique mais cache les dépendances. DI = Explicite et testable.", "DI est lent.", "Facades sont dépréciées."],
+        correctAnswer: 1,
+        explanation: "`User::create()` est une Facade. C'est 'magique'. L'injection `__construct(UserRepository $repo)` est architecturale."
+      },
+      {
+        id: 'fs_t4_15',
+        tier: 4,
+        text: "DevOps : Blue-Green Deployment ?",
+        options: ["Couleurs.", "Deux environnements prod identiques. On déploie sur Green (inactif), on teste, puis on bascule le routeur de Blue vers Green instantanément.", "Canary.", "Rolling."],
+        correctAnswer: 1,
+        explanation: "Zero downtime. Rollback instantané (on rebascule sur Blue)."
+      },
+      {
+        id: 'fs_t4_16',
+        tier: 4,
+        text: "Pattern : Circuit Breaker States ?",
+        options: ["On/Off.", "Closed (Tout va bien), Open (Erreur, on bloque), Half-Open (On teste si ça revient).", "Up/Down.", "True/False."],
+        correctAnswer: 1,
+        explanation: "La machine à états qui protège ton système des pannes en cascade."
+      },
+      {
+        id: 'fs_t4_17',
+        tier: 4,
+        text: "Réseau : TLS Handshake performance cost ?",
+        options: ["Nul.", "1 ou 2 RTT (Round Trip Time) supplémentaires avant d'envoyer des données. Impacte la latence initiale.", "Énorme.", "CPU."],
+        correctAnswer: 1,
+        explanation: "C'est pourquoi on utilise HTTP/2 ou 3 (QUIC) et le Session Resumption pour éviter de refaire le handshake complet."
+      },
+      {
+        id: 'fs_t4_18',
+        tier: 4,
+        text: "Java : JIT (Just-In-Time) Compiler ?",
+        options: ["Compile avant.", "Compile le Bytecode en code machine natif AU RUNTIME pour les parties chaudes (Hotspots) du code.", "Interpréteur.", "Lent."],
+        correctAnswer: 1,
+        explanation: "C'est pourquoi Java 'chauffe' et devient plus rapide après quelques minutes."
+      },
+
+      // =================================================================================
+      // BATCH 1: ALGORITHMS & DATA STRUCTURES (New Injection)
+      // =================================================================================
+      {
+        id: 'algo_t1_1',
+        tier: 1,
+        text: "Algo : Recherche Binaire (Binary Search) condition ?",
+        options: ["Aucune.", "Le tableau doit être TRIÉ.", "Le tableau doit être d'entiers.", "Tableau infini."],
+        correctAnswer: 1,
+        explanation: "Impossible de diviser pour régner si les données sont en désordre. Complexité O(log n)."
+      },
+      {
+        id: 'algo_t1_2',
+        tier: 1,
+        text: "DS : HashTable (HashMap) principe ?",
+        options: ["Liste chaînée.", "Associe une Clé à une Valeur via une fonction de hachage pour un accès direct.", "Arbre.", "Pile."],
+        correctAnswer: 1,
+        explanation: "L'outil le plus puissant du développeur. Accès O(1) en moyenne."
+      },
+      {
+        id: 'algo_t1_3',
+        tier: 1,
+        text: "Algo : Récursion ?",
+        options: ["Boucle for.", "Une fonction qui s'appelle elle-même avec une condition d'arrêt (Base Case).", "Erreur.", "Parallélisme."],
+        correctAnswer: 1,
+        explanation: "Attention au Stack Overflow si tu oublies la condition d'arrêt !"
+      },
+      {
+        id: 'algo_t2_1',
+        tier: 2,
+        text: "DS : Linked List vs Array (Insertion) ?",
+        options: ["Pareil.", "Array est O(n) (décalage des éléments). Linked List est O(1) (changer les pointeurs) si on a la position.", "Array est O(1).", "Linked List est lent."],
+        correctAnswer: 1,
+        explanation: "Insérer au milieu d'un tableau oblige à déplacer tous les éléments suivants. Une liste chaînée change juste un lien."
+      },
+      {
+        id: 'algo_t2_2',
+        tier: 2,
+        text: "Algo : DFS (Depth First Search) structure ?",
+        options: ["Queue (FIFO).", "Stack (LIFO) ou Récursion.", "Array.", "Map."],
+        correctAnswer: 1,
+        explanation: "On plonge au fond du graphe avant de remonter. Utilise une Pile (Stack)."
+      },
+      {
+        id: 'algo_t2_3',
+        tier: 2,
+        text: "Algo : BFS (Breadth First Search) usage ?",
+        options: ["Trier.", "Trouver le chemin le plus court dans un graphe non pondéré.", "Calculer.", "Stack."],
+        correctAnswer: 1,
+        explanation: "Explore couche par couche (les voisins, puis les voisins des voisins). Idéal pour le GPS (simplifié)."
+      },
+      {
+        id: 'algo_t3_1',
+        tier: 3,
+        text: "Algo : Tri Fusion (Merge Sort) stabilité ?",
+        options: ["Instable.", "Stable (préserve l'ordre relatif des éléments égaux).", "Aléatoire.", "Lent."],
+        correctAnswer: 1,
+        explanation: "Crucial si tu tries par Nom puis par Date. QuickSort n'est généralement pas stable."
+      },
+      {
+        id: 'algo_t3_2',
+        tier: 3,
+        text: "DS : Tas (Heap) / Priority Queue ?",
+        options: ["Stockage.", "Arbre binaire complet où le parent est toujours plus grand (Max-Heap) ou petit (Min-Heap) que ses enfants.", "Liste.", "Lent."],
+        correctAnswer: 1,
+        explanation: "Accès au Min/Max en O(1). Insertion/Suppression en O(log n). Utilisé pour les tâches planifiées."
+      },
+      {
+        id: 'algo_t3_3',
+        tier: 3,
+        text: "Algo : Dynamic Programming (Memoization) ?",
+        options: ["Magie.", "Optimiser la récursion en stockant les résultats des sous-problèmes déjà calculés (Cache).", "Boucle.", "Hasard."],
+        correctAnswer: 1,
+        explanation: "Transforme O(2^n) (Fibonacci naïf) en O(n). On échange de la mémoire contre du temps CPU."
+      },
+      {
+        id: 'algo_t4_1',
+        tier: 4,
+        text: "Algo : Dijkstra vs A* (A-Star) ?",
+        options: ["Pareil.", "Dijkstra explore uniformément. A* utilise une heuristique (estimation distance restante) pour guider la recherche vers la cible plus vite.", "A* est moins précis.", "Dijkstra est pour les jeux."],
+        correctAnswer: 1,
+        explanation: "A* est l'algo de Pathfinding standard dans les jeux vidéo car il est dirigé."
+      },
+      {
+        id: 'algo_t4_2',
+        tier: 4,
+        text: "DS : Bloom Filter ?",
+        options: ["Filtre photo.", "Structure probabiliste efficace en espace qui dit soit 'NON sûr', soit 'PEUT-ÊTRE oui'. Jamais de faux négatifs.", "Cache.", "Liste."],
+        correctAnswer: 1,
+        explanation: "Utilisé par les DB pour savoir si une ligne existe sur disque sans lire le disque. Économise énormément d'I/O."
+      },
+      {
+        id: 'algo_t4_3',
+        tier: 4,
+        text: "Algo : P vs NP ?",
+        options: ["Politique.", "P = Résoluble rapidement. NP = Vérifiable rapidement. P = NP est le grand problème non résolu de l'informatique.", "Maths.", "Physique."],
+        correctAnswer: 1,
+        explanation: "Si P=NP, la cryptographie moderne s'effondre."
+      },
+      {
+        id: 'algo_t4_4',
+        tier: 4,
+        text: "DS : Trie (Prefix Tree) usage ?",
+        options: ["Trier.", "Autocomplétion et recherche de préfixes. Stocke les chaînes caractère par caractère.", "Arbre binaire.", "Liste."],
+        correctAnswer: 1,
+        explanation: "Ultra rapide pour 'Trouver tous les mots commençant par A-V-I...'."
+      },
+      {
+        id: 'algo_t4_5',
+        tier: 4,
+        text: "Algo : Floyd's Cycle Detection (Tortoise & Hare) ?",
+        options: ["Biologie.", "Détecter un cycle dans une liste chaînée avec deux pointeurs (lent et rapide) et O(1) mémoire.", "Tri.", "Graph."],
+        correctAnswer: 1,
+        explanation: "Si le lièvre (rapide) rattrape la tortue (lent), il y a une boucle. Sinon il atteint la fin."
+      },
+
+      // =================================================================================
+      // BATCH 2: NETWORKING & PROTOCOLS (New Injection)
+      // =================================================================================
+      {
+        id: 'net_t1_1',
+        tier: 1,
+        text: "Réseau : IP Address ?",
+        options: ["Adresse postale.", "Identifiant unique numérique d'une machine sur un réseau (Internet Protocol).", "Nom de domaine.", "Adresse MAC."],
+        correctAnswer: 1,
+        explanation: "IPv4 (192.168.1.1) ou IPv6. C'est l'adresse de livraison des paquets."
+      },
+      {
+        id: 'net_t1_2',
+        tier: 1,
+        text: "HTTP : Status 200 ?",
+        options: ["Erreur.", "OK. La requête a réussi.", "Redirection.", "Non trouvé."],
+        correctAnswer: 1,
+        explanation: "Le code que tout le monde veut voir."
+      },
+      {
+        id: 'net_t1_3',
+        tier: 1,
+        text: "HTTP : Status 404 ?",
+        options: ["Erreur serveur.", "Not Found. La ressource demandée n'existe pas.", "Interdit.", "Succès."],
+        correctAnswer: 1,
+        explanation: "URL invalide ou ressource supprimée."
+      },
+      {
+        id: 'net_t1_4',
+        tier: 1,
+        text: "HTTP : Status 500 ?",
+        options: ["Client error.", "Internal Server Error. Le serveur a planté.", "OK.", "Redirection."],
+        correctAnswer: 1,
+        explanation: "C'est ta faute (développeur backend). Regarde les logs."
+      },
+      {
+        id: 'net_t1_5',
+        tier: 1,
+        text: "Réseau : localhost IP ?",
+        options: ["192.168.0.1", "127.0.0.1", "0.0.0.0", "8.8.8.8"],
+        correctAnswer: 1,
+        explanation: "La maison. La boucle locale."
+      },
+      {
+        id: 'net_t2_1',
+        tier: 2,
+        text: "HTTP : Idempotence de GET ?",
+        options: ["Non.", "Oui. Appeler GET 100 fois ne doit rien changer sur le serveur (Lecture seule).", "Parfois.", "Seulement avec cache."],
+        correctAnswer: 1,
+        explanation: "GET doit être 'Safe'. Ne jamais modifier de données avec un GET."
+      },
+      {
+        id: 'net_t2_2',
+        tier: 2,
+        text: "Réseau : Ping commande ?",
+        options: ["Jeu.", "Envoie des paquets ICMP Echo Request pour tester la connectivité avec une machine.", "Scan de port.", "Télécharge."],
+        correctAnswer: 1,
+        explanation: "Le stéthoscope du réseau. 'Es-tu vivant ?'."
+      },
+      {
+        id: 'net_t2_3',
+        tier: 2,
+        text: "Web : Cookie HttpOnly ?",
+        options: ["Uniquement HTTP.", "Cookie inaccessible via JavaScript (`document.cookie`). Protège contre le vol de session via XSS.", "Crypté.", "Visible."],
+        correctAnswer: 1,
+        explanation: "Si tu stockes un JWT dans un cookie, mets-le en HttpOnly. Toujours."
+      },
+      {
+        id: 'net_t2_4',
+        tier: 2,
+        text: "Réseau : OSI Layer 4 ?",
+        options: ["Physique.", "Transport (TCP/UDP).", "Application.", "Réseau."],
+        correctAnswer: 1,
+        explanation: "Gère la transmission de bout en bout, la segmentation et le contrôle de flux."
+      },
+      {
+        id: 'net_t2_5',
+        tier: 2,
+        text: "Web : SSL/TLS ?",
+        options: ["Virus.", "Protocole de sécurité qui crypte la connexion entre client et serveur (HTTPS).", "Langage.", "Base de données."],
+        correctAnswer: 1,
+        explanation: "Assure la confidentialité et l'intégrité des données. Utilise des certificats X.509."
+      },
+      {
+        id: 'net_t3_1',
+        tier: 3,
+        text: "HTTP : Header `Cache-Control: no-cache` ?",
+        options: ["Pas de cache.", "Le navigateur PEUT mettre en cache, mais DOIT revalider avec le serveur (ETag) avant de l'utiliser.", "Cache infini.", "Erreur."],
+        correctAnswer: 1,
+        explanation: "Contre-intuitif. `no-store` interdit le cache. `no-cache` force la revalidation (304 Not Modified)."
+      },
+      {
+        id: 'net_t3_2',
+        tier: 3,
+        text: "Réseau : Subnet Mask /24 ?",
+        options: ["24 adresses.", "255.255.255.0. Signifie que les 24 premiers bits définissent le réseau, les 8 derniers les hôtes (254 machines).", "Grand réseau.", "Petit réseau."],
+        correctAnswer: 1,
+        explanation: "Standard des réseaux domestiques. 192.168.1.X."
+      },
+      {
+        id: 'net_t3_3',
+        tier: 3,
+        text: "Web : Content Security Policy (CSP) ?",
+        options: ["Police.", "Header HTTP qui liste les sources autorisées (domaines) pour charger des scripts, images, styles. Contre le XSS.", "CSS.", "Cache."],
+        correctAnswer: 1,
+        explanation: "Empêche ton site de charger `malicious.js` depuis un site tiers inconnu."
+      },
+      {
+        id: 'net_t3_4',
+        tier: 3,
+        text: "Réseau : Reverse Proxy (Nginx) vs Forward Proxy ?",
+        options: ["Pareil.", "Reverse protège le SERVEUR (Load balancing, SSL). Forward protège le CLIENT (Anonymat, Filtrage entrprise).", "Inverse.", "Routeur."],
+        correctAnswer: 1,
+        explanation: "Nginx devant ton app Node.js est un Reverse Proxy."
+      },
+      {
+        id: 'net_t3_5',
+        tier: 3,
+        text: "HTTP : ETag ?",
+        options: ["Tag HTML.", "Identifiant unique (Hash) d'une version de ressource. Permet le cache conditionnel (If-None-Match).", "Prix.", "Erreur."],
+        correctAnswer: 1,
+        explanation: "Si le hash envoyé par le client correspond au hash serveur -> 304 Not Modified (0 octet téléchargé)."
+      },
+      {
+        id: 'net_t4_1',
+        tier: 4,
+        text: "HTTP/2 vs HTTP/1.1 : Multiplexing ?",
+        options: ["Plus rapide.", "HTTP/1.1 = 1 requête par connexion TCP (Head-of-Line Blocking). HTTP/2 = Plusieurs requêtes parallèles dans la MÊME connexion TCP.", "Compression.", "Secure."],
+        correctAnswer: 1,
+        explanation: "Révolutionnaire. Fini le besoin de concaténer les JS/CSS ou d'utiliser des sprites d'images."
+      },
+      {
+        id: 'net_t4_2',
+        tier: 4,
+        text: "Réseau : QUIC (HTTP/3) ?",
+        options: ["Rapide.", "Remplace TCP par UDP pour éviter le Head-of-Line Blocking au niveau paquet et réduire la latence de handshake.", "TCP amélioré.", "VPN."],
+        correctAnswer: 1,
+        explanation: "TCP est trop lent à démarrer. Google a inventé QUIC (sur UDP) pour aller plus vite. C'est le futur."
+      },
+      {
+        id: 'net_t4_3',
+        tier: 4,
+        text: "Web : Server-Sent Events (SSE) vs WebSockets ?",
+        options: ["Pareil.", "SSE = Unidirectionnel (Serveur -> Client) sur HTTP standard. WebSocket = Bidirectionnel, protocole custom.", "SSE est vieux.", "WebSocket est lent."],
+        correctAnswer: 1,
+        explanation: "Pour un fil d'actu ou des notifs, SSE est plus simple et passe mieux les pare-feux que les WebSockets."
+      },
+      {
+        id: 'net_t4_4',
+        tier: 4,
+        text: "Réseau : Load Balancing L4 vs L7 ?",
+        options: ["Niveau.", "L4 (Transport) route basé sur IP/Port (rapide, aveugle). L7 (Application) route basé sur URL/Headers/Cookies (intelligent, décrypte HTTPS).", "L7 est vieux.", "L4 est lent."],
+        correctAnswer: 1,
+        explanation: "AWS NLB (L4) vs ALB (L7). Si tu veux router `/api` vers Service A et `/img` vers Service B, il te faut du L7."
+      },
+      {
+        id: 'net_t4_5',
+        tier: 4,
+        text: "Réseau : Anycast DNS ?",
+        options: ["Broadcast.", "Plusieurs serveurs partagent la MÊME adresse IP. Le réseau route ta requête vers le serveur le plus proche topologiquement.", "Multicast.", "Unicast."],
+        correctAnswer: 1,
+        explanation: "Comment Google DNS (8.8.8.8) répond en 10ms partout dans le monde ? Il y a des centaines de serveurs '8.8.8.8'."
+      },
+
+      // =================================================================================
+      // BATCH 3: ADVANCED DATABASES (New Injection)
+      // =================================================================================
+      {
+        id: 'db_t1_1',
+        tier: 1,
+        text: "DB : SELECT * ?",
+        options: ["Bien.", "Mauvaise pratique. Récupère TOUTES les colonnes, gaspille la bande passante et empêche les index 'Covering'.", "Obligatoire.", "Rapide."],
+        correctAnswer: 1,
+        explanation: "Ne demande que les colonnes dont tu as besoin (`SELECT id, name`). Ton réseau te remerciera."
+      },
+      {
+        id: 'db_t1_2',
+        tier: 1,
+        text: "DB : NULL en SQL ?",
+        options: ["Zéro.", "L'absence de valeur (Inconnu). Attention : `NULL != NULL` est Vrai (Unknown).", "Vide.", "Faux."],
+        correctAnswer: 1,
+        explanation: "`SELECT * FROM users WHERE age = NULL` ne marche pas. Il faut utiliser `IS NULL`."
+      },
+      {
+        id: 'db_t1_3',
+        tier: 1,
+        text: "DB : Foreign Key (Clé étrangère) ?",
+        options: ["Clé d'un autre pays.", "Contrainte qui garantit que la valeur d'une colonne correspond à une Clé Primaire existante dans une autre table.", "Index.", "Optionnel."],
+        correctAnswer: 1,
+        explanation: "Garantit l'intégrité référentielle. Empêche d'avoir une commande liée à un utilisateur qui n'existe pas."
+      },
+      {
+        id: 'db_t2_1',
+        tier: 2,
+        text: "DB : HAVING vs WHERE ?",
+        options: ["Pareil.", "WHERE filtre AVANT le regroupement (GROUP BY). HAVING filtre APRÈS (sur les agrégats).", "HAVING est plus rapide.", "WHERE est déprécié."],
+        correctAnswer: 1,
+        explanation: "`WHERE salary > 1000` marche. `WHERE COUNT(*) > 5` plante (il faut `HAVING`)."
+      },
+      {
+        id: 'db_t2_2',
+        tier: 2,
+        text: "DB : SQL Injection '1 OR 1=1' ?",
+        options: ["Maths.", "Tautologie qui rend la condition toujours Vraie. Permet de contourner l'authentification.", "Erreur.", "Optimisation."],
+        correctAnswer: 1,
+        explanation: "`SELECT * FROM users WHERE user = '$u' AND pass = '$p'`. Si $p est `' OR '1'='1`, ça loggue n'importe qui."
+      },
+      {
+        id: 'db_t2_3',
+        tier: 2,
+        text: "DB : Redis cas d'usage ?",
+        options: ["Stockage long terme.", "Cache, Session Store, Files d'attente, Leaderboard (In-Memory Key-Value store).", "Relationnel.", "Fichiers."],
+        correctAnswer: 1,
+        explanation: "Ultra rapide (RAM). Si le serveur reboote, tu perds les données (sauf si persistance configurée)."
+      },
+      {
+        id: 'db_t2_4',
+        tier: 2,
+        text: "DB : MongoDB (Document) avantage ?",
+        options: ["SQL.", "Schéma flexible (JSON/BSON). Idéal pour les données non structurées ou le prototypage rapide.", "Transaction.", "Jointure."],
+        correctAnswer: 1,
+        explanation: "Pas de migration de schéma (ALTER TABLE) bloquante. Mais attention à la dette technique."
+      },
+      {
+        id: 'db_t3_1',
+        tier: 3,
+        text: "DB : Index Composite (Multi-colonnes) ?",
+        options: ["Plusieurs index.", "Un seul index sur (A, B). L'ordre compte ! Optimise `WHERE A=1 AND B=2` et `WHERE A=1`, mais PAS `WHERE B=2`.", "Lent.", "Inutile."],
+        correctAnswer: 1,
+        explanation: "Règle du préfixe de gauche. Comme un annuaire (Nom, Prénom). Tu ne peux pas chercher par Prénom seul."
+      },
+      {
+        id: 'db_t3_2',
+        tier: 3,
+        text: "DB : N+1 Query Problem (ORM) ?",
+        options: ["Algèbre.", "Faire 1 requête pour la liste parente + N requêtes pour les enfants (une par ligne). Tueur de perf.", "Bonne pratique.", "Erreur SQL."],
+        correctAnswer: 1,
+        explanation: "Utilise `JOIN` en SQL pur ou `Eager Loading` (.include/.with) dans ton ORM."
+      },
+      {
+        id: 'db_t3_3',
+        tier: 3,
+        text: "DB : Connection Pooling ?",
+        options: ["Piscine.", "Réutiliser un ensemble de connexions ouvertes au lieu d'en ouvrir/fermer une à chaque requête HTTP (coûteux).", "Sécurité.", "Partage."],
+        correctAnswer: 1,
+        explanation: "Ouvrir une connexion TCP/SSL vers MySQL prend 100ms. Le pool la rend instantanée."
+      },
+      {
+        id: 'db_t3_4',
+        tier: 3,
+        text: "DB : Soft Delete ?",
+        options: ["Suppression douce.", "Marquer une ligne comme supprimée (`deleted_at IS NOT NULL`) sans l'effacer physiquement. Permet la restauration.", "Erreur.", "Lent."],
+        correctAnswer: 1,
+        explanation: "Attention : toutes tes requêtes doivent inclure `WHERE deleted_at IS NULL` sinon les fantômes réapparaissent."
+      },
+      {
+        id: 'db_t3_5',
+        tier: 3,
+        text: "DB : UNION vs UNION ALL ?",
+        options: ["Pareil.", "UNION supprime les doublons (coûteux : tri). UNION ALL garde tout (rapide).", "UNION ALL trie.", "UNION est déprécié."],
+        correctAnswer: 1,
+        explanation: "Si tu sais que tes deux tables n'ont pas de chevauchement, utilise toujours UNION ALL."
+      },
+      {
+        id: 'db_t4_1',
+        tier: 4,
+        text: "DB : Window Functions (ROW_NUMBER) ?",
+        options: ["Fenêtre.", "Permet des calculs sur un jeu de lignes (partition) sans les grouper (contrairement à GROUP BY). Ex: Top 3 ventes par vendeur.", "Vue.", "Index."],
+        correctAnswer: 1,
+        explanation: "`RANK() OVER (PARTITION BY dept ORDER BY salary DESC)`. Puissant pour l'analytique."
+      },
+      {
+        id: 'db_t4_2',
+        tier: 4,
+        text: "DB : Isolation Level Serializable ?",
+        options: ["Moyen.", "Le plus strict. Garantit que le résultat des transactions concurrentes est le même que si elles étaient exécutées l'une après l'autre. Bloquant.", "Rapide.", "Défaut."],
+        correctAnswer: 1,
+        explanation: "Empêche les Phantom Reads. Le prix à payer est le verrouillage massif et les Deadlocks fréquents."
+      },
+      {
+        id: 'db_t4_3',
+        tier: 4,
+        text: "DB : CTE (Common Table Expression) - WITH ?",
+        options: ["Avec.", "Créer une table temporaire nommée pour simplifier une requête complexe (lisibilité). Peut être récursif.", "Vue.", "Variable."],
+        correctAnswer: 1,
+        explanation: "Remplace les sous-requêtes imbriquées illisibles. `WITH Sales AS (...) SELECT * FROM Sales`."
+      },
+      {
+        id: 'db_t4_4',
+        tier: 4,
+        text: "DB : Cassandra (Column-family store) usage ?",
+        options: ["Petit site.", "Écriture massive (Write heavy), Big Data, Haute Disponibilité (AP). Pas de jointures, modélisation basée sur les requêtes.", "Transactionnel.", "Cache."],
+        correctAnswer: 1,
+        explanation: "Tu ne modélises pas les entités, tu modélises tes requêtes (`Table UsersByCity`)."
+      },
+      {
+        id: 'db_t4_5',
+        tier: 4,
+        text: "DB : Database Migration - Blue/Green ?",
+        options: ["Couleur.", "Découpler la migration de schéma (ajout colonne nullable) du déploiement de code pour éviter le downtime.", "Backup.", "Copie."],
+        correctAnswer: 1,
+        explanation: "Ne jamais renlmnommer une colonne en prod. 1. Ajouter new_col. 2. Code écrit dans les deux. 3. Migrer data. 4. Code lit new_col. 5. Supprimer old_col."
+      },
+      {
+        id: 'db_t4_6',
+        tier: 4,
+        text: "DB : Deadlock (Interblocage) ?",
+        options: ["Mort.", "Transaction A locke Table 1 et veut Table 2. Transaction B locke Table 2 et veut Table 1. Les deux attendent l'autre indéfiniment.", "Erreur syntaxe.", "Crash disque."],
+        correctAnswer: 1,
+        explanation: "Le SGBD finit par tuer une des deux transactions. Pour éviter : toujours acquérir les verrous dans le même ordre."
+      },
+      {
+        id: 'db_t4_7',
+        tier: 4,
+        text: "DB : WAL (Write Ahead Log) ?",
+        options: ["Mur.", "Journal des modifications écrit sur disque AVANT d'appliquer les changements aux fichiers de données. Garantit la durabilité (ACID) en cas de crash.", "Log erreur.", "Cache."],
+        correctAnswer: 1,
+        explanation: "Si la prise est débranchée, la DB rejoue le WAL au redémarrage pour restaurer l'état cohérent."
+      },
+
+      // =================================================================================
+      // BATCH 4: DEVOPS & GIT MASTERY (New Injection)
+      // =================================================================================
+      {
+        id: 'dev_t1_1',
+        tier: 1,
+        text: "Git : `git pull` ?",
+        options: ["Tirer.", "C'est `git fetch` suivi de `git merge`. Télécharge et fusionne les changements distants.", "Envoie le code.", "Annule."],
+        correctAnswer: 1,
+        explanation: "Attention aux conflits si tu as modifié les mêmes fichiers que tes collègues."
+      },
+      {
+        id: 'dev_t1_2',
+        tier: 1,
+        text: "DevOps : Environnement de Staging ?",
+        options: ["Scène.", "Réplique exacte de la Production pour tester avant le déploiement final (Pre-Prod).", "Développement.", "Local."],
+        correctAnswer: 1,
+        explanation: "Si ça marche en Staging, ça DEVRAIT marcher en Prod (sauf loi de Murphy)."
+      },
+      {
+        id: 'dev_t1_3',
+        tier: 1,
+        text: "Linux : `ssh` ?",
+        options: ["Silence.", "Secure Shell. Protocole pour se connecter à distance à un serveur de manière sécurisée.", "Copie.", "Web."],
+        correctAnswer: 1,
+        explanation: "La clé de ta maison numérique. `ssh user@ip`."
+      },
+      {
+        id: 'dev_t2_1',
+        tier: 2,
+        text: "Docker : Multi-stage Build ?",
+        options: ["Complexe.", "Technique pour réduire la taille de l'image finale en utilisant une image temporaire pour le build (avec compilateurs) et une image légère pour le runtime.", "Plusieurs conteneurs.", "Lent."],
+        correctAnswer: 1,
+        explanation: "Tu compiles ton Go/Java dans une image 'Builder' de 1Go, tu copies juste le binaire dans une image 'Alpine' de 10Mo."
+      },
+      {
+        id: 'dev_t2_2',
+        tier: 2,
+        text: "Git : `git rebase -i` (Interactive) ?",
+        options: ["Dangereux.", "Permet de réécrire l'historique local : fusionner (squash) des commits, changer les messages, supprimer des commits.", "Fusionner.", "Supprimer."],
+        correctAnswer: 1,
+        explanation: "Pour nettoyer ton historique 'WIP' sale avant de merger ta PR. Ne jamais faire sur une branche publique !"
+      },
+      {
+        id: 'dev_t2_3',
+        tier: 2,
+        text: "K8s : ConfigMap vs Secret ?",
+        options: ["Pareil.", "ConfigMap pour les configurations non-sensibles (URL, ports). Secret pour les mots de passe/clés (encodé base64).", "Secret est crypté.", "ConfigMap est statique."],
+        correctAnswer: 1,
+        explanation: "Ne committe jamais tes secrets dans le repo Git. Injecte-les via K8s Secrets."
+      },
+      {
+        id: 'dev_t2_4',
+        tier: 2,
+        text: "DevOps : Semantic Versioning (SemVer) ?",
+        options: ["1.0.", "MAJOR.MINOR.PATCH (ex: 2.1.4). Major = Breaking Change. Minor = Feature. Patch = Bugfix.", "Date.", "Aléatoire."],
+        correctAnswer: 1,
+        explanation: "Si tu passes de 1.0.0 à 2.0.0, tu dis à tes utilisateurs : 'Attention, j'ai cassé la compatibilité'."
+      },
+      {
+        id: 'dev_t3_1',
+        tier: 3,
+        text: "Terraform : State File ?",
+        options: ["État.", "Fichier JSON qui mappe ta configuration IaC aux ressources réelles du cloud. Source de vérité unique.", "Config.", "Log."],
+        correctAnswer: 1,
+        explanation: "Si tu perds le state file, Terraform ne sait plus ce qu'il a créé et risque de tout recréer (ou rien détruire)."
+      },
+      {
+        id: 'dev_t3_2',
+        tier: 3,
+        text: "Git : `git reflog` ?",
+        options: ["Log référence.", "Journal de toutes les actions locales (même les resets/rebases). Permet de retrouver un commit 'perdu' qui n'est plus dans l'historique.", "Log serveur.", "Erreur."],
+        correctAnswer: 1,
+        explanation: "Le filet de sécurité ultime. 'J'ai supprimé ma branche par erreur !' -> `git reflog` -> `git checkout SHA`."
+      },
+      {
+        id: 'dev_t3_3',
+        tier: 3,
+        text: "K8s : Ingress Controller ?",
+        options: ["Entrée.", "Point d'entrée HTTP/S du cluster. Gère le routing (L7) vers les services internes (ex: Nginx Ingress).", "Firewall.", "Service."],
+        correctAnswer: 1,
+        explanation: "Remplace le LoadBalancer classique pour exposer 50 microservices sur une seule IP publique."
+      },
+      {
+        id: 'dev_t3_4',
+        tier: 3,
+        text: "Monitoring : Prometheus vs Grafana ?",
+        options: ["Pareil.", "Prometheus collecte les métriques (Time Series DB). Grafana les visualise (Dashboards).", "Grafana collecte.", "Prometheus affiche."],
+        correctAnswer: 1,
+        explanation: "Le couple inséparable du monitoring Cloud Native."
+      },
+      {
+        id: 'dev_t3_5',
+        tier: 3,
+        text: "DevOps : Immutable Infrastructure ?",
+        options: ["Solide.", "On ne modifie jamais un serveur en place (SSH update). On le détruit et on en déploie un nouveau avec la nouvelle image.", "Stable.", "Statique."],
+        correctAnswer: 1,
+        explanation: "Évite le 'Configuration Drift' (serveurs flocon de neige qui diffèrent tous un peu)."
+      },
+      {
+        id: 'dev_t4_1',
+        tier: 4,
+        text: "K8s : Sidecar Pattern ?",
+        options: ["Moto.", "Ajouter un conteneur auxiliaire dans le MÊME Pod pour étendre le conteneur principal (ex: Logging agent, Proxy Service Mesh).", "Sécurité.", "Backup."],
+        correctAnswer: 1,
+        explanation: "Partage le même disque et réseau (localhost) que l'app principale. Utilisé par Istio/Envoy."
+      },
+      {
+        id: 'dev_t4_2',
+        tier: 4,
+        text: "Git : Submodules vs Subtree ?",
+        options: ["Sous-dossier.", "Submodule pointe vers un commit précis d'un autre repo (lien rigide). Subtree copie le code (plus facile à gérer).", "Pareil.", "Subtree est déprécié."],
+        correctAnswer: 1,
+        explanation: "Les submodules sont l'enfer des devs ('detached head state'). Subtree est souvent préféré pour les monorepos."
+      },
+      {
+        id: 'dev_t4_3',
+        tier: 4,
+        text: "DevOps : Trunk Based Development vs Gitflow ?",
+        options: ["Arbre.", "Trunk: Tout le monde commit sur `main` (avec Feature Flags). Gitflow: Branches complexes (develop, release, feature).", "Gitflow est moderne.", "Trunk est dangereux."],
+        correctAnswer: 1,
+        explanation: "Les géants (Google, Meta) utilisent Trunk Based pour livrer vite. Gitflow est trop lent pour le CI/CD continu."
+      },
+      {
+        id: 'dev_t4_4',
+        tier: 4,
+        text: "Observability : Tracing (OpenTelemetry) ?",
+        options: ["Traceur.", "Suivre le parcours d'une requête à travers TOUS les microservices (Distributed Tracing) pour trouver les goulots d'étranglement.", "Logging.", "Metriques."],
+        correctAnswer: 1,
+        explanation: "Sans Trace ID propagé via les headers, impossible de débugger 'Pourquoi ma requête est lente ?' dans 50 services."
+      },
+      {
+        id: 'dev_t4_5',
+        tier: 4,
+        text: "Linux : `kill -9` vs `kill -15` ?",
+        options: ["Chiffres.", "15 (SIGTERM) demande gentiment de s'arrêter (cleanup). 9 (SIGKILL) tue le processus brutalement (perte de données possible).", "9 est mieux.", "Pareil."],
+        correctAnswer: 1,
+        explanation: "Toujours essayer 15 d'abord. 9 ne laisse aucune chance au process de fermer ses fichiers/connexions."
+      },
+
+      // =================================================================================
+      // BATCH 5: ARCHITECTURE & DESIGN PATTERNS (New Injection)
+      // =================================================================================
+      {
+        id: 'arch_t1_1',
+        tier: 1,
+        text: "Principes : KISS ?",
+        options: ["Bisou.", "Keep It Simple, Stupid. Ne complique pas le code inutilement.", "Keep It Solid Secure.", "Key Index Simple Storage."],
+        correctAnswer: 1,
+        explanation: "La complexité est l'ennemie. Si tu peux le faire simplement, fais-le simplement."
+      },
+      {
+        id: 'arch_t1_2',
+        tier: 1,
+        text: "Principes : DRY ?",
+        options: ["Sec.", "Don't Repeat Yourself. Évite la duplication de code/logique.", "Do Repeat Yourself.", "Database Relation Yield."],
+        correctAnswer: 1,
+        explanation: "Si tu changes une logique, tu ne devrais avoir à modifier qu'un seul endroit."
+      },
+      {
+        id: 'arch_t1_3',
+        tier: 1,
+        text: "Pattern : Factory simple ?",
+        options: ["Usine.", "Une fonction/méthode statique qui crée et retourne des objets.", "Singleton.", "Constructeur."],
+        correctAnswer: 1,
+        explanation: "Encapsule le `new` pour centraliser la logique de création."
+      },
+      {
+        id: 'arch_t2_1',
+        tier: 2,
+        text: "SOLID : 'S' (Single Responsibility) ?",
+        options: ["Simple.", "Une classe ne doit avoir qu'une seule raison de changer (une seule responsabilité).", "Singleton.", "Security."],
+        correctAnswer: 1,
+        explanation: "Ton `User` ne doit pas gérer la sauvegarde en DB ET l'envoi d'email. Sépare."
+      },
+      {
+        id: 'arch_t2_2',
+        tier: 2,
+        text: "SOLID : 'O' (Open/Closed) ?",
+        options: ["Ouvert.", "Ouvert à l'extension, fermé à la modification. On ajoute du comportement sans toucher au code existant.", "Open Source.", "Optimisé."],
+        correctAnswer: 1,
+        explanation: "Utilise le polymorphisme (Interfaces) pour ajouter des features sans casser le vieux code."
+      },
+      {
+        id: 'arch_t2_3',
+        tier: 2,
+        text: "Pattern : Template Method ?",
+        options: ["HTML.", "Définit le squelette d'un algorithme dans une méthode, en déléguant certaines étapes aux sous-classes.", "Factory.", "Strategy."],
+        correctAnswer: 1,
+        explanation: "`AbstractClass` définit l'ordre des étapes, `ConcreteClass` implémente les détails de chaque étape."
+      },
+      {
+        id: 'arch_t2_4',
+        tier: 2,
+        text: "Arch : Monolith vs Microservices ?",
+        options: ["Taille.", "Monolith = Tout dans un seul processus/déploiement. Microservices = Découpé en services indépendants communiquant via réseau.", "Microservices toujours mieux.", "Monolith est mort."],
+        correctAnswer: 1,
+        explanation: "Le monolithe est plus simple à développer/déployer au début. Les microservices scalent mieux humainement et techniquement, mais ajoutent une complexité monstre."
+      },
+      {
+        id: 'arch_t3_1',
+        tier: 3,
+        text: "Pattern : Chain of Responsibility ?",
+        options: ["Chaîne.", "Passe une requête le long d'une chaîne de handlers. Chacun décide de traiter ou de passer au suivant.", "Liste.", "Boucle."],
+        correctAnswer: 1,
+        explanation: "Les Middlewares Laravel/Express sont basés là-dessus."
+      },
+      {
+        id: 'arch_t3_2',
+        tier: 3,
+        text: "Pattern : State ?",
+        options: ["État.", "Permet à un objet de changer de comportement quand son état interne change. (Machine à états).", "Strategy.", "Observer."],
+        correctAnswer: 1,
+        explanation: "Remplace les `switch (state) { case 'DRAFT': ... case 'PUBLISHED': ... }` par des classes d'état."
+      },
+      {
+        id: 'arch_t3_3',
+        tier: 3,
+        text: "Arch : BFF (Backend For Frontend) ?",
+        options: ["Best Friend.", "Une couche API spécifique pour chaque type de client (Web, Mobile) qui agrège et formate les données pour lui.", "Base de données.", "Proxy."],
+        correctAnswer: 1,
+        explanation: "Le Mobile veut moins de données que le Desktop. Le BFF adapte la réponse."
+      },
+      {
+        id: 'arch_t3_4',
+        tier: 3,
+        text: "SOLID : 'D' (Dependency Inversion) ?",
+        options: ["Dépendance.", "Les modules de haut niveau ne doivent pas dépendre des détails de bas niveau. Les deux doivent dépendre d'abstractions (Interfaces).", "Injection.", "Docker."],
+        correctAnswer: 1,
+        explanation: "Ne dépend pas de `MySQLDatabase`, dépend de `DatabaseInterface`."
+      },
+      {
+        id: 'arch_t3_5',
+        tier: 3,
+        text: "Arch : Strangler Fig Pattern ?",
+        options: ["Plante.", "Remplacer progressivement un système Legacy par un nouveau, module par module, jusqu'à ce que l'ancien disparaisse.", "Big Bang.", "Réécriture."],
+        correctAnswer: 1,
+        explanation: "La seule façon sûre de migrer un monolithe géant. On ne réécrit jamais tout d'un coup (Big Bang)."
+      },
+      {
+        id: 'arch_t4_1',
+        tier: 4,
+        text: "Pattern : Visitor ?",
+        options: ["Visite.", "Sépare un algorithme de la structure de données sur laquelle il opère. Permet d'ajouter de nouvelles opérations sans modifier les classes.", "Iterator.", "Composite."],
+        correctAnswer: 1,
+        explanation: "Complexe mais puissant. Utilisé dans les compilateurs pour traverser l'AST (Abstract Syntax Tree)."
+      },
+      {
+        id: 'arch_t4_2',
+        tier: 4,
+        text: "Pattern : Memento ?",
+        options: ["Souvenir.", "Capture et externalise l'état interne d'un objet pour permettre de le restaurer plus tard (Undo/Redo) sans violer l'encapsulation.", "Serialize.", "Cache."],
+        correctAnswer: 1,
+        explanation: "Comment fonctionne le Ctrl+Z dans ton éditeur."
+      },
+      {
+        id: 'arch_t4_3',
+        tier: 4,
+        text: "SOLID : 'L' (Liskov) - Covariance ?",
+        options: ["Variable.", "Une méthode surchargée dans une sous-classe peut retourner un sous-type du type de retour original (plus précis), mais pas un super-type.", "Invariance.", "Erreur."],
+        correctAnswer: 1,
+        explanation: "Si `Animal.getEnfant()` rend `Animal`, `Chat.getEnfant()` peut rendre `Chat` (Covariant), mais pas `Object`."
+      },
+      {
+        id: 'arch_t4_4',
+        tier: 4,
+        text: "SOLID : 'I' (Interface Segregation) ?",
+        options: ["Ségrégation.", "Mieux vaut plusieurs petites interfaces spécifiques qu'une seule interface généraliste géante que le client n'utilise pas entièrement.", "Isolement.", "Héritage."],
+        correctAnswer: 1,
+        explanation: "Ne force pas une classe à implémenter `voler()` si c'est un `Pingouin`. Fais une interface `Volant`."
+      },
+      {
+        id: 'arch_t4_5',
+        tier: 4,
+        text: "Arch : Outbox Pattern ?",
+        options: ["Email.", "Pour garantir la transaction duale (DB + Event Bus) : on écrit l'événement dans une table 'Outbox' DANS la même transaction DB, puis un process le publie.", "Inbox.", "Log."],
+        correctAnswer: 1,
+        explanation: "Résout le problème 'J'ai sauvegardé en DB mais le message RabbitMQ a échoué'."
+      },
+      {
+        id: 'arch_t4_6',
+        tier: 4,
+        text: "Law of Demeter (LoD) ?",
+        options: ["Loi.", "Principe de moindre connaissance. Un objet ne doit parler qu'à ses amis proches. Évite `a.getB().getC().doSomething()`.", "Déméter.", "Chaînage."],
+        correctAnswer: 1,
+        explanation: " 'Ne parle pas aux inconnus'. Réduit le couplage. Si la structure de B change, A ne doit pas casser."
+      },
+      {
+        id: 'arch_t4_7',
+        tier: 4,
+        text: "Pattern : Composite ?",
+        options: ["Composition.", "Traiter un groupe d'objets (Arbre) de la même façon qu'un objet unique. (ex: Dossier contient Fichiers et Dossiers).", "Liste.", "Mix."],
+        correctAnswer: 1,
+        explanation: "Permet de faire `dossier.taille()` qui somme récursivement tout le contenu, comme `fichier.taille()`."
+      },
+
+      // =================================================================================
+      // BATCH 6: FRONTEND MASTERY (New Injection)
+      // =================================================================================
+      {
+        id: 'front_t1_1',
+        tier: 1,
+        text: "JS : `NaN` === `NaN` ?",
+        options: ["Vrai.", "Faux. NaN est la seule valeur en JS qui n'est pas égale à elle-même.", "Erreur.", "Null."],
+        correctAnswer: 1,
+        explanation: "Utilise `Number.isNaN()` pour vérifier. Spécificité IEEE 754."
+      },
+      {
+        id: 'front_t1_2',
+        tier: 1,
+        text: "CSS : `z-index` ne marche pas ?",
+        options: ["Bug navigateur.", "Il faut définir `position` (relative, absolute, fixed, sticky) autre que `static`.", "Il faut un ID.", "Il faut `display: block`."],
+        correctAnswer: 1,
+        explanation: "Le z-index ne s'applique qu'aux éléments positionnés."
+      },
+      {
+        id: 'front_t1_3',
+        tier: 1,
+        text: "HTML : `aria-label` ?",
+        options: ["Label visuel.", "Attribut d'accessibilité pour fournir un nom textuel aux lecteurs d'écran (ex: icône bouton).", "Style.", "Script."],
+        correctAnswer: 1,
+        explanation: "Vital pour l'accessibilité (a11y). Un bouton avec juste une icône 'X' doit avoir `aria-label='Fermer'`."
+      },
+      {
+        id: 'front_t2_1',
+        tier: 2,
+        text: "JS : Closure (Fermeture) ?",
+        options: ["Fermer la fenêtre.", "Une fonction qui 'se souvient' de son environnement lexical (variables) même après que la fonction parente ait terminé.", "Une classe.", "Un objet privé."],
+        correctAnswer: 1,
+        explanation: "Base du module pattern et des hooks React. Permet d'avoir des variables privées."
+      },
+      {
+        id: 'front_t2_2',
+        tier: 2,
+        text: "CSS : Flexbox `justify-content` vs `align-items` ?",
+        options: ["Pareil.", "Justify = Axe Principal (Main Axis). Align = Axe Transversal (Cross Axis).", "Justify = Vertical.", "Align = Horizontal."],
+        correctAnswer: 1,
+        explanation: "Si `flex-direction: row` (défaut), Justify gère l'horizontal. Si `column`, Justify gère le vertical."
+      },
+      {
+        id: 'front_t2_3',
+        tier: 2,
+        text: "JS : Event Bubbling ?",
+        options: ["Bulles.", "L'événement se propage de l'élément cible vers ses parents (vers le haut du DOM).", "Vers le bas.", "N'existe pas."],
+        correctAnswer: 1,
+        explanation: "Tu cliques sur un `span`, l'événement monte au `div`, puis au `body`. `stopPropagation()` empêche ça."
+      },
+      {
+        id: 'front_t2_4',
+        tier: 2,
+        text: "Vue : Modifiers d'événement `.prevent` ?",
+        options: ["Empêche le clic.", "Appelle `event.preventDefault()` automatiquement (ex: empêche le rechargement d'un formulaire).", "Arrête la propagation.", "Rien."],
+        correctAnswer: 1,
+        explanation: "`@submit.prevent='save'` est le standard pour les formulaires SPA."
+      },
+      {
+        id: 'front_t3_1',
+        tier: 3,
+        text: "JS : Prototype Chain ?",
+        options: ["Héritage classique.", "Chaque objet a un lien interne vers un autre objet (son prototype). Si une propriété n'est pas trouvée, JS cherche dans le prototype, etc.", "Classes Java.", "Clonage."],
+        correctAnswer: 1,
+        explanation: "Tout est objet en JS. `Array` hérite de `Object`. C'est de l'héritage prototypal, pas de classe."
+      },
+      {
+        id: 'front_t3_2',
+        tier: 3,
+        text: "CSS : Stacking Context (Piège z-index) ?",
+        options: ["Empilement simple.", "Un z-index:999 dans un parent avec `opacity:0.9` peut passer DERRIÈRE un z-index:1 extérieur.", "Bug.", "Calque."],
+        correctAnswer: 1,
+        explanation: "Certaines propriétés CSS (`opacity`, `transform`, `filter`) créent un NOUVEAU contexte d'empilement, isolant les z-index enfants."
+      },
+      {
+        id: 'front_t3_3',
+        tier: 3,
+        text: "JS : `this` dans une Arrow Function ?",
+        options: ["Comme une fonction normale.", "Lexical `this`. Il capture la valeur de `this` du contexte englobant au moment de la définition. Ne peut pas être changé par `.bind()`.", "Global.", "Undefined."],
+        correctAnswer: 1,
+        explanation: "Fini le `var self = this`. L'arrow function garde le `this` de la classe ou du scope parent."
+      },
+      {
+        id: 'front_t3_4',
+        tier: 3,
+        text: "Browser : Repaint vs Reflow ?",
+        options: ["Peinture.", "Reflow (Layout) recalcule la position/taille (coûteux). Repaint redessine les pixels (couleur).", "Reflow est rapide.", "Pareil."],
+        correctAnswer: 1,
+        explanation: "Changer `width` cause un Reflow. Changer `color` cause un Repaint. Évite les Reflows dans les animations (utilise `transform`)."
+      },
+      {
+        id: 'front_t3_5',
+        tier: 3,
+        text: "Web API : Intersection Observer ?",
+        options: ["Observer le trafic.", "API performante pour détecter quand un élément entre dans le viewport (Lazy loading images, Infinite scroll).", "Scroll listener.", "Mouse tracker."],
+        correctAnswer: 1,
+        explanation: "Remplace les écouteurs de scroll lourds qui bloquent le thread principal."
+      },
+      {
+        id: 'front_t4_1',
+        tier: 4,
+        text: "JS : Microtasks vs Macrotasks ?",
+        options: ["Tâches.", "Microtasks (Promises, MutationObserver) s'exécutent AVANT le rendu et AVANT la prochaine Macrotask (setTimeout).", "Inverse.", "Pareil."],
+        correctAnswer: 1,
+        explanation: "Une boucle infinie de Microtasks bloque le navigateur. `setTimeout` laisse le navigateur respirer."
+      },
+      {
+        id: 'front_t4_2',
+        tier: 4,
+        text: "JS : WeakMap usage ?",
+        options: ["Carte faible.", "Map où les clés sont des objets et sont 'faiblement tenues' (Garbage Collectable). Évite les fuites de mémoire pour stocker des métadonnées sur des objets DOM.", "Cache.", "Session."],
+        correctAnswer: 1,
+        explanation: "Si la clé (objet DOM) est supprimée, la valeur dans la WeakMap est automatiquement nettoyée par le GC."
+      },
+      {
+        id: 'front_t4_3',
+        tier: 4,
+        text: "Web : Service Worker Lifecycle ?",
+        options: ["Simple.", "Install -> Activate -> Fetch/Message. Il agit comme un proxy réseau programmable (Offline, Cache).", "Background.", "Thread."],
+        correctAnswer: 1,
+        explanation: "C'est le cœur des PWA. Attention : la mise à jour du SW est complexe (waiting phase)."
+      },
+      {
+        id: 'front_t4_4',
+        tier: 4,
+        text: "CSS : `will-change` property ?",
+        options: ["Futur.", "Indique au navigateur qu'un élément va changer (ex: transform), lui permettant de créer une couche GPU (Compositing Layer) à l'avance.", "Animation.", "Variable."],
+        correctAnswer: 1,
+        explanation: "Optimisation ultime pour le 60fps. À utiliser avec parcimonie sinon la VRAM explose."
+      },
+      {
+        id: 'front_t4_5',
+        tier: 4,
+        text: "Vue 3 : Teleport ?",
+        options: ["Science-fiction.", "Permet de rendre un composant enfant dans un autre endroit du DOM (ex: `<body>`), hors de la hiérarchie du composant parent (utile pour Modales/Tooltips).", "Portal.", "Routeur."],
+        correctAnswer: 1,
+        explanation: "Évite les problèmes de `overflow: hidden` ou `z-index` du parent qui coupent ta modale."
+      },
+      {
+        id: 'front_t4_6',
+        tier: 4,
+        text: "JS : Generateurs (`function*`) ?",
+        options: ["Usines.", "Fonctions qui peuvent être mises en pause (`yield`) et reprises. Base de `async/await`.", "Thread.", "Boucle."],
+        correctAnswer: 1,
+        explanation: "Permet de créer des itérateurs custom ou de gérer des flux de contrôle asynchrones complexes."
+      },
+
+      // =================================================================================
+      // BATCH 7: BACKEND, SECURITY & INTEGRATION (New Injection)
+      // =================================================================================
+      {
+        id: 'back_t1_1',
+        tier: 1,
+        text: "API : Pagination Offset ?",
+        options: ["Cursor.", "`LIMIT 10 OFFSET 20`. Simple mais lent sur les grandes tables (la DB scanne et jette les lignes).", "Rapide.", "Complexe."],
+        correctAnswer: 1,
+        explanation: "Plus tu vas loin (`OFFSET 1000000`), plus c'est lent. Préfère la pagination par Curseur (`WHERE id > last_id`)."
+      },
+      {
+        id: 'back_t1_2',
+        tier: 1,
+        text: "Security : Hachage de mot de passe ?",
+        options: ["MD5.", "Utiliser un algo lent et salé (Argon2, bcrypt, PBKDF2). Jamais MD5 ou SHA1 (trop rapides).", "SHA-256.", "Texte clair."],
+        correctAnswer: 1,
+        explanation: "Un hash rapide aide les hackers (Brute-force). Un hash lent (100ms) rend l'attaque impossible."
+      },
+      {
+        id: 'back_t1_3',
+        tier: 1,
+        text: "Backend : Cron Job ?",
+        options: ["Temps.", "Tâche planifiée qui s'exécute automatiquement à intervalles réguliers (ex: cleanup logs minuit).", "Serveur web.", "Base de données."],
+        correctAnswer: 1,
+        explanation: "Le réveil-matin de ton serveur."
+      },
+      {
+        id: 'back_t2_1',
+        tier: 2,
+        text: "API : Versioning URI vs Header ?",
+        options: ["Pareil.", "URI (`/v1/users`) est explicite et cacheable. Header (`Accept: v1`) est plus RESTful (Content Negotiation) mais dur à tester.", "Header est mieux.", "URI est déprécié."],
+        correctAnswer: 1,
+        explanation: "L'URI est le choix pragmatique standard. Le Header est le choix puriste."
+      },
+      {
+        id: 'back_t2_2',
+        tier: 2,
+        text: "Integration : Webhooks ?",
+        options: ["Hameçon.", "Le serveur appelle TON url (HTTP POST) quand un événement survient (Push). Évite le Polling (Pull).", "Polling.", "Socket."],
+        correctAnswer: 1,
+        explanation: "Au lieu de demander 'C'est prêt ?' toutes les secondes, Stripe t'appelle pour dire 'Paiement reçu'."
+      },
+      {
+        id: 'back_t2_3',
+        tier: 2,
+        text: "Security : Salt (Sel) ?",
+        options: ["Cuisine.", "Donnée aléatoire ajoutée au mot de passe avant hachage pour empêcher les attaques par Rainbow Tables.", "Poivre.", "Sucre."],
+        correctAnswer: 1,
+        explanation: "Sans sel, deux utilisateurs avec le mot de passe '123456' auraient le même hash."
+      },
+      {
+        id: 'back_t2_4',
+        tier: 2,
+        text: "Performance : Gzip/Brotli ?",
+        options: ["Images.", "Algorithmes de compression pour réduire la taille des réponses HTTP (HTML/CSS/JS/JSON) avant envoi.", "Cryptage.", "Base de données."],
+        correctAnswer: 1,
+        explanation: "Réduit la bande passante de 70%. Indispensable."
+      },
+      {
+        id: 'back_t3_1',
+        tier: 3,
+        text: "API : HATEOAS ?",
+        options: ["Haine.", "Hypermedia As The Engine Of Application State. L'API renvoie des liens (`_links`) pour guider le client vers les actions possibles.", "JSON.", "XML."],
+        correctAnswer: 1,
+        explanation: "Le niveau 3 de REST. Le client n'a pas besoin de connaître les URL à l'avance, il suit les liens."
+      },
+      {
+        id: 'back_t3_2',
+        tier: 3,
+        text: "Security : RBAC vs ABAC ?",
+        options: ["Pareil.", "RBAC (Role Based) : Accès selon le Rôle (Admin). ABAC (Attribute Based) : Accès selon des attributs complexes (Heure, Dept, Propriétaire).", "ABAC est plus simple.", "RBAC est obsolète."],
+        correctAnswer: 1,
+        explanation: "RBAC : 'Les managers peuvent valider'. ABAC : 'Les managers peuvent valider SI montant < 1000€ ET heure < 18h'."
+      },
+      {
+        id: 'back_t3_3',
+        tier: 3,
+        text: "Integration : RabbitMQ vs Kafka ?",
+        options: ["Pareil.", "RabbitMQ = Smart Broker, Dumb Consumer (Queue classique). Kafka = Dumb Broker, Smart Consumer (Log stream, replayable).", "Kafka est une queue.", "RabbitMQ est un log."],
+        correctAnswer: 1,
+        explanation: "RabbitMQ : Le message disparaît après lecture. Kafka : Le message reste (rétention), on peut le relire."
+      },
+      {
+        id: 'back_t3_4',
+        tier: 3,
+        text: "gRPC vs REST ?",
+        options: ["Google.", "gRPC utilise Protobuf (binaire, typé, contrat strict) sur HTTP/2. Plus performant que REST (JSON/Texte).", "REST est binaire.", "gRPC est JSON."],
+        correctAnswer: 1,
+        explanation: "Idéal pour la communication inter-microservices (Backend-to-Backend) à haute performance."
+      },
+      {
+        id: 'back_t3_5',
+        tier: 3,
+        text: "Performance : Cache 'Write-Through' ?",
+        options: ["Écrire à travers.", "On écrit en Cache ET en DB simultanément. Lecture rapide, écriture un peu plus lente, cohérence forte.", "Write-Back.", "Cache Aside."],
+        correctAnswer: 1,
+        explanation: "Garantit que le cache n'est jamais périmé par rapport à la DB."
+      },
+      {
+        id: 'back_t4_1',
+        tier: 4,
+        text: "Security : OpenID Connect (OIDC) vs OAuth2 ?",
+        options: ["Pareil.", "OAuth2 est pour l'AUTORISATION (Accès API). OIDC est une couche sur OAuth2 pour l'AUTHENTIFICATION (Identité User).", "OIDC est vieux.", "OAuth2 identifie."],
+        correctAnswer: 1,
+        explanation: "OAuth2 te donne une clé pour ouvrir la porte. OIDC te donne un badge avec ton nom et ta photo (`id_token`)."
+      },
+      {
+        id: 'back_t4_2',
+        tier: 4,
+        text: "Security : JWT 'None' Algorithm Attack ?",
+        options: ["Rien.", "Si le serveur ne vérifie pas l'algo, un hacker peut envoyer un token avec `alg: none` et une fausse signature, et être accepté.", "Pas grave.", "Feature."],
+        correctAnswer: 1,
+        explanation: "Faille historique critique. Toujours whitelister les algos acceptés (HS256, RS256)."
+      },
+      {
+        id: 'back_t4_3',
+        tier: 4,
+        text: "Integration : Protobuf (Protocol Buffers) ?",
+        options: ["Buffer.", "Format de sérialisation binaire de Google. Schéma strict (.proto), plus compact et rapide que JSON.", "Texte.", "Obsolète."],
+        correctAnswer: 1,
+        explanation: "Pas de noms de champs dans le payload ('name': 'Bob'), juste des IDs (1: 'Bob'). Gain de taille énorme."
+      },
+      {
+        id: 'back_t4_4',
+        tier: 4,
+        text: "API : Idempotency Key implementation ?",
+        options: ["Clé.", "Stocker la clé (UUID) envoyée par le client avec la réponse. Si la clé revient, renvoyer la réponse stockée SANS retraiter.", "Cookie.", "Header."],
+        correctAnswer: 1,
+        explanation: "Assure que 'Payer' n'est exécuté qu'une seule fois même si le réseau coupe."
+      },
+      {
+        id: 'back_t4_5',
+        tier: 4,
+        text: "Performance : HTTP Keep-Alive ?",
+        options: ["Vivant.", "Garder la connexion TCP ouverte pour envoyer plusieurs requêtes HTTP successives, évitant le coût du handshake à chaque fois.", "Timeout.", "Ping."],
+        correctAnswer: 1,
+        explanation: "Défaut en HTTP/1.1. Vital pour la perf."
+      },
+
+      // =================================================================================
+      // BATCH 8: GENERAL KNOWLEDGE, TESTING & METHODOLOGIES (New Injection)
+      // =================================================================================
+      {
+        id: 'gen_t1_1',
+        tier: 1,
+        text: "Testing : Unit Test (Test Unitaire) ?",
+        options: ["Test tout.", "Tester une petite unité de code (fonction/classe) de manière isolée, sans dépendances externes (DB/Réseau).", "Test manuel.", "Test UI."],
+        correctAnswer: 1,
+        explanation: "Rapide, fiable, précis. La base de la pyramide de tests."
+      },
+      {
+        id: 'gen_t1_2',
+        tier: 1,
+        text: "Methodology : Agile Manifesto valeur clé ?",
+        options: ["Documentation > Code.", "Individus et interactions > Processus et outils.", "Plans > Changement.", "Contrats > Collaboration."],
+        correctAnswer: 1,
+        explanation: "L'humain d'abord. Les outils sont là pour aider, pas pour contraindre."
+      },
+      {
+        id: 'gen_t1_3',
+        tier: 1,
+        text: "General : UTF-8 ?",
+        options: ["8 bits.", "Encodage de caractères à longueur variable (1 à 4 octets) capable de représenter tous les caractères Unicode (Emojis inclus).", "ASCII.", "Compression."],
+        correctAnswer: 1,
+        explanation: "Le standard du web. ASCII ne gère que l'anglais."
+      },
+      {
+        id: 'gen_t1_4',
+        tier: 1,
+        text: "Testing : Assert ?",
+        options: ["Certifier.", "Instruction qui vérifie qu'une condition est vraie. Si faux, le test échoue.", "Insérer.", "Commentaire."],
+        correctAnswer: 1,
+        explanation: "`assertEquals(2, 1+1)`."
+      },
+      {
+        id: 'gen_t2_1',
+        tier: 2,
+        text: "Testing : Mock vs Stub ?",
+        options: ["Pareil.", "Stub : Objet bouchon qui renvoie des données pré-définies. Mock : Objet qui vérifie COMMENT il a été appelé (interaction).", "Mock est réel.", "Stub vérifie."],
+        correctAnswer: 1,
+        explanation: "Stub : 'Si on t'appelle, réponds X'. Mock : 'Vérifie qu'on t'a appelé avec l'argument Y'."
+      },
+      {
+        id: 'gen_t2_2',
+        tier: 2,
+        text: "Methodology : TDD (Test Driven Development) cycle ?",
+        options: ["Code -> Test -> Refactor.", "Red (Fail) -> Green (Pass) -> Refactor.", "Refactor -> Test -> Code.", "Test -> Deploy."],
+        correctAnswer: 1,
+        explanation: "Tu écris le test AVANT le code. Ça force à concevoir l'API avant l'implémentation."
+      },
+      {
+        id: 'gen_t2_3',
+        tier: 2,
+        text: "CS : Stack vs Heap memory ?",
+        options: ["Pareil.", "Stack : Mémoire statique rapide (variables locales, appels fonctions). Heap : Mémoire dynamique (objets `new`) gérée par le GC.", "Heap est rapide.", "Stack est gros."],
+        correctAnswer: 1,
+        explanation: "Stack Overflow arrive quand la pile d'appels est pleine. OutOfMemoryError arrive quand le Heap est plein."
+      },
+      {
+        id: 'gen_t2_4',
+        tier: 2,
+        text: "General : Rubber Duck Debugging ?",
+        options: ["Jouet.", "Expliquer son code ligne par ligne à un objet inanimé (canard) pour trouver le bug soi-même.", "Outil.", "Insulte."],
+        correctAnswer: 1,
+        explanation: "Le simple fait de verbaliser le problème active des zones différentes du cerveau."
+      },
+      {
+        id: 'gen_t2_5',
+        tier: 2,
+        text: "Methodology : Code Review but principal ?",
+        options: ["Trouver des bugs.", "Partager la connaissance, assurer la qualité/maintenabilité et trouver des bugs. (Dans cet ordre).", "Critiquer.", "Ralentir."],
+        correctAnswer: 1,
+        explanation: "Si seul l'auteur comprend le code, c'est un échec (Bus Factor = 1)."
+      },
+      {
+        id: 'gen_t3_1',
+        tier: 3,
+        text: "Testing : E2E (End-to-End) ?",
+        options: ["Test fin.", "Tester le parcours utilisateur complet sur l'application déployée (Cypress/Playwright), comme un vrai user.", "Test unitaire.", "Test API."],
+        correctAnswer: 1,
+        explanation: "Lent et fragile (Flaky), mais c'est le seul qui garantit que 'ça marche vraiment'."
+      },
+      {
+        id: 'gen_t3_2',
+        tier: 3,
+        text: "Methodology : Technical Debt (Dette Technique) ?",
+        options: ["Argent.", "Coût implicite d'une solution rapide/sale maintenant vs une solution propre. Les 'intérêts' se paient en maintenance plus difficile.", "Crédit.", "Bug."],
+        correctAnswer: 1,
+        explanation: "Parfois nécessaire pour aller vite, mais doit être remboursée (refactoring) sinon le projet gèle."
+      },
+      {
+        id: 'gen_t3_3',
+        tier: 3,
+        text: "CS : Floating Point Math (0.1 + 0.2) ?",
+        options: ["0.3", "0.30000000000000004", "Erreur.", "0.33"],
+        correctAnswer: 1,
+        explanation: "IEEE 754. Les ordinateurs comptent en base 2, et 0.1 est périodique en binaire (comme 1/3 en décimal). Ne jamais utiliser float pour l'argent !"
+      },
+      {
+        id: 'gen_t3_4',
+        tier: 3,
+        text: "Testing : Integration Test ?",
+        options: ["Intégrale.", "Vérifier que plusieurs modules (ou Services/DB) fonctionnent correctement ENSEMBLE.", "Test unitaire.", "Test manuel."],
+        correctAnswer: 1,
+        explanation: "Les unitaires passent, mais la connexion DB échoue ? C'est l'intégration qui le détecte."
+      },
+      {
+        id: 'gen_t3_5',
+        tier: 3,
+        text: "General : Bus Factor ?",
+        options: ["Transport.", "Nombre de membres de l'équipe qui doivent se faire écraser par un bus pour que le projet s'arrête (Connaissance unique).", "Vitesse.", "Budget."],
+        correctAnswer: 1,
+        explanation: "Vise un Bus Factor élevé. Tout le monde doit pouvoir reprendre le travail de tout le monde."
+      },
+      {
+        id: 'gen_t4_1',
+        tier: 4,
+        text: "Testing : Property Based Testing (QuickCheck) ?",
+        options: ["Immobilier.", "Au lieu d'exemples (1+1=2), définir des PROPRIÉTÉS (x+y = y+x) et laisser le framework générer 1000 cas de tests aléatoires (dont edge cases).", "Mock.", "Unit."],
+        correctAnswer: 1,
+        explanation: "Trouve des bugs impossibles à imaginer humainement."
+      },
+      {
+        id: 'gen_t4_2',
+        tier: 4,
+        text: "Testing : Mutation Testing ?",
+        options: ["X-Men.", "Modifier (muter) le code source (ex: `a > b` devient `a >= b`) et vérifier si les tests échouent (tuent le mutant).", "Test ADN.", "Performance."],
+        correctAnswer: 1,
+        explanation: "Vérifie la QUALITÉ de tes tests. Si tes tests passent quand on inverse une condition dans le code, tes tests sont inutiles."
+      },
+      {
+        id: 'gen_t4_3',
+        tier: 4,
+        text: "CS : Compile vs Interpret ?",
+        options: ["Pareil.", "Compilé : Code -> Machine Code (binaire) avant exécution (C++). Interprété : Code -> Exécuté ligne par ligne par une VM/Moteur (Python/JS).", "Java est pur interprété.", "C++ est interprété."],
+        correctAnswer: 1,
+        explanation: "Note : Java/JS utilisent le JIT (Just-In-Time) qui est un hybride."
+      },
+      {
+        id: 'gen_t4_4',
+        tier: 4,
+        text: "Methodology : Broken Windows Theory ?",
+        options: ["OS.", "Si on laisse du mauvais code (vitre cassée) sans le réparer, cela encourage le laisser-aller et la qualité globale s'effondre rapidement.", "Microsoft.", "Linux."],
+        correctAnswer: 1,
+        explanation: "Répare les petites erreurs tout de suite. Boy Scout Rule : 'Laisse le camp plus propre que tu ne l'as trouvé'."
+      },
+      {
+        id: 'gen_t4_5',
+        tier: 4,
+        text: "CS : Little Endian vs Big Endian ?",
+        options: ["Taille.", "Ordre des octets en mémoire. Big : Octet de poids fort en premier (comme nous). Little : Poids faible en premier (Intel x86).", "Fin.", "Début."],
+        correctAnswer: 1,
+        explanation: "Crucial quand on lit du binaire ou fait du réseau."
       }
     ]
   }
