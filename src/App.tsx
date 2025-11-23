@@ -151,6 +151,8 @@ export default function App() {
   const [lastResult, setLastResult] = useState<{ correct: boolean; question: Question; timeOut?: boolean } | null>(null);
   const [timeLeft, setTimeLeft] = useState<number>(0);
 
+  const [showExitModal, setShowExitModal] = useState(false);
+
   // Audio placeholders (browser policies prevent auto-play often, visuals are safer)
   
   const startSession = (trackId: TrackId) => {
@@ -180,15 +182,17 @@ export default function App() {
 
   // Timer Logic
   useEffect(() => {
-    if (gameState !== 'PLAYING' || !session) return;
+    if (gameState !== 'PLAYING' || !session || showExitModal) return; // Pause timer if modal open
 
-    const currentQuestion = session.questions[session.currentIndex];
-    const limit = (currentQuestion.tier === 1 || currentQuestion.tier === 2) 
-      ? TIME_LIMITS.LOW 
-      : TIME_LIMITS.HIGH;
+    // const currentQuestion = session.questions[session.currentIndex];
+    // const limit = (currentQuestion.tier === 1 || currentQuestion.tier === 2) 
+    //   ? TIME_LIMITS.LOW 
+    //   : TIME_LIMITS.HIGH;
     
-    setTimeLeft(limit);
-
+    // Only reset time if it's a new question (we need to track this better in real app, 
+    // but for now let's assume timeLeft is managed by state updates on nextQuestion)
+    // Actually, let's reset timeLeft in nextQuestion/startSession to be safe.
+    
     const timer = setInterval(() => {
       setTimeLeft((prev) => {
         if (prev <= 1) {
@@ -201,7 +205,19 @@ export default function App() {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [session?.currentIndex, gameState]);
+  }, [session?.currentIndex, gameState, showExitModal]); // Added showExitModal dependency
+
+  // Initialize timer on new question
+  useEffect(() => {
+      if (session) {
+          const currentQuestion = session.questions[session.currentIndex];
+          const limit = (currentQuestion.tier === 1 || currentQuestion.tier === 2) 
+            ? TIME_LIMITS.LOW 
+            : TIME_LIMITS.HIGH;
+          setTimeLeft(limit);
+      }
+  }, [session?.currentIndex]);
+
 
   const handleTimeOut = () => {
     if (!session) return;
@@ -257,7 +273,43 @@ export default function App() {
     setGameState('PLAYING');
   };
 
+  const handleExit = () => {
+      setShowExitModal(true);
+  };
+
+  const confirmExit = () => {
+      setShowExitModal(false);
+      setSession(null);
+      setGameState('MENU');
+  };
+
   // --- Render Helpers ---
+
+  const renderModal = () => {
+      if (!showExitModal) return null;
+      return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+            <motion.div 
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                className="max-w-md w-full border border-cyber-neonRed bg-cyber-black p-6 shadow-[0_0_20px_rgba(255,0,60,0.3)] space-y-6"
+            >
+                <div className="flex items-center gap-3 text-cyber-neonRed">
+                    <ShieldAlert className="w-8 h-8" />
+                    <h3 className="text-xl font-bold font-mono uppercase">Alerte Système</h3>
+                </div>
+                <p className="text-cyber-text font-mono">
+                    Abandonner la session en cours ?<br/>
+                    <span className="text-cyber-muted text-sm">Toute progression sera perdue définitivement.</span>
+                </p>
+                <div className="flex justify-end gap-4 pt-4">
+                    <Button onClick={() => setShowExitModal(false)} variant="ghost">Annuler</Button>
+                    <Button onClick={confirmExit} variant="danger">CONFIRMER_ABANDON()</Button>
+                </div>
+            </motion.div>
+        </div>
+      );
+  };
 
   const renderMenu = () => (
     <motion.div 
@@ -322,18 +374,28 @@ export default function App() {
     const timePercentage = (timeLeft / maxTime) * 100;
     const isLowTime = timeLeft <= 5;
 
+    // Calculate live stats
+    const answeredCount = session.history.length;
+    const correctCount = session.history.filter(h => h.correct).length;
+    const accuracy = answeredCount > 0 ? Math.round((correctCount / answeredCount) * 100) : 100;
+
     return (
       <div className="max-w-3xl w-full mx-auto h-full flex flex-col">
         {/* HUD */}
         <header className="border-b border-cyber-gray bg-cyber-black/90 p-4 flex items-center justify-between sticky top-0 z-10 backdrop-blur-md">
           <div className="flex items-center gap-4">
-            <span className="font-mono font-bold text-cyber-neonBlue uppercase tracking-widest text-sm">
-              {TRACKS[session.trackId].name}
-            </span>
-            <span className="h-4 w-px bg-cyber-gray" />
-            <span className={cn("font-mono text-xs px-2 py-0.5 border rounded", tierInfo.color, "border-current")}>
-              TIER {question.tier}
-            </span>
+            <Button onClick={handleExit} variant="ghost" className="px-2 py-1 h-8 border-cyber-gray text-xs">
+                ← QUITTER
+            </Button>
+            <div className="hidden md:flex items-center gap-4">
+                <span className="font-mono font-bold text-cyber-neonBlue uppercase tracking-widest text-sm">
+                {TRACKS[session.trackId].name}
+                </span>
+                <span className="h-4 w-px bg-cyber-gray" />
+                <span className={cn("font-mono text-xs px-2 py-0.5 border rounded", tierInfo.color, "border-current")}>
+                TIER {question.tier}
+                </span>
+            </div>
           </div>
           
           <div className="absolute left-1/2 -translate-x-1/2 flex flex-col items-center">
@@ -341,9 +403,11 @@ export default function App() {
              <LifeBar lives={session.lives} maxLives={session.maxLives} />
           </div>
 
-          <div className="text-right">
-             <div className="text-xs font-mono text-cyber-muted">Score</div>
+          <div className="text-right flex flex-col items-end">
              <div className="font-mono font-bold text-xl text-white">{session.score.toString().padStart(5, '0')}</div>
+             <div className="text-[10px] font-mono text-cyber-muted flex gap-2">
+                 <span>PRÉCISION: <span className={accuracy > 80 ? "text-cyber-neonGreen" : accuracy > 50 ? "text-yellow-500" : "text-cyber-neonRed"}>{accuracy}%</span></span>
+             </div>
           </div>
         </header>
 
@@ -413,6 +477,7 @@ export default function App() {
             </motion.div>
           </AnimatePresence>
         </main>
+        {renderModal()}
       </div>
     );
   };
@@ -484,13 +549,13 @@ export default function App() {
     if (!session) return null;
     
     // Calculate Rank based on percentage
-    const maxScore = session.questions.reduce((acc, q) => acc + TIERS_CONFIG[q.tier as keyof typeof TIERS_CONFIG].multiplier, 0);
+    // const maxScore = session.questions.reduce((acc, q) => acc + TIERS_CONFIG[q.tier as keyof typeof TIERS_CONFIG].multiplier, 0);
     // Real score calculation needs to track max possible score of *played* questions, 
     // but for this prototype we approximate ratio based on questions answered.
     // A better ratio is score / (questions_seen * avg_points)
     
     // Let's use a simple accuracy ratio on answered questions for the rank title
-    const answeredCount = session.currentIndex; // Questions actually faced
+    // const answeredCount = session.currentIndex; // Questions actually faced
     const maxPossibleSoFar = session.history.reduce((acc, h) => {
         const q = session.questions.find(q => q.id === h.questionId);
         return acc + (q ? TIERS_CONFIG[q.tier as keyof typeof TIERS_CONFIG].multiplier : 0);
