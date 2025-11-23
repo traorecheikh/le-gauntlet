@@ -584,23 +584,24 @@ export default function App() {
     let style = "text-cyber-muted";
 
     if (maxTierReached === 4 && isGameClear) {
-        // God Tier
+        // God Tier (Beat Tier 4)
         rankIndex = 9;
     } else if (maxTierReached === 4) {
-        // Failed at Tier 4 but reached it
+        // Failed IN Tier 4 (So passed Tier 3)
         rankIndex = 8; 
     } else if (maxTierReached === 3) {
-        // Failed at Tier 4 or cleared Tier 3
-        rankIndex = isGameClear ? 8 : 7;
+        // Failed IN Tier 3 (So passed Tier 2)
+        rankIndex = isGameClear ? 7 : 6;
     } else if (maxTierReached === 2) {
-        // Failed at Tier 3 or cleared Tier 2
-        rankIndex = isGameClear ? 6 : 5; 
-    } else if (maxTierReached === 1) {
-        // Failed at Tier 2 or cleared Tier 1
-        rankIndex = isGameClear ? 4 : 3;
+        // Failed IN Tier 2 (So passed Tier 1)
+        rankIndex = isGameClear ? 5 : 4; 
     } else {
-        // Failed at Tier 1
-        rankIndex = Math.floor(ratio * 2); // 0, 1 or 2 depending on how bad it was
+        // Failed IN Tier 1 (Never answered a Tier 2 question correctly)
+        // Map ratio 0-100% to ranks 0-3
+        if (ratio > 0.8) rankIndex = 3; // Junior en sursis (Good accuracy but died)
+        else if (ratio > 0.5) rankIndex = 2; // Stagiaire
+        else if (ratio > 0.2) rankIndex = 1; // Touriste
+        else rankIndex = 0; // Abandonne
     }
 
     const rankTitle = RANKS[rankIndex as keyof typeof RANKS];
